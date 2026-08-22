@@ -1,0 +1,122 @@
+{
+  "id": "SUBJECT-pos",
+  "technicalId": "subject-pos",
+  "name": "POS",
+  "version": "0.1.0",
+  "image": "ghcr.io/opus-perpetuus/subject-pos:0.1.0",
+  "compat": {
+    "nox": ">=0.5.0",
+    "kit": "^0.5.0"
+  },
+  "api": {
+    "basePath": "/",
+    "port": 3000,
+    "healthPath": "/health"
+  },
+  "permissions": [
+    {
+      "id": "subject.pos.pos-session.read",
+      "label": "Ver Sesiones POS"
+    },
+    {
+      "id": "subject.pos.pos-session.write",
+      "label": "Editar Sesiones POS"
+    },
+    {
+      "id": "subject.pos.pos.read",
+      "label": "Ver Estación POS"
+    },
+    {
+      "id": "subject.pos.pos.write",
+      "label": "Editar Estación POS"
+    },
+    {
+      "id": "subject.pos.pos-order.read",
+      "label": "Ver Ordenes"
+    },
+    {
+      "id": "subject.pos.pos-order.write",
+      "label": "Editar Ordenes"
+    },
+    {
+      "id": "subject.pos.pos-tickets.read",
+      "label": "Ver Tickets"
+    },
+    {
+      "id": "subject.pos.pos-tickets.write",
+      "label": "Editar Tickets"
+    }
+  ],
+  "pages": [
+    {
+      "id": "pos.pos-session",
+      "path": "pos-session",
+      "permission": "subject.pos.pos-session.read"
+    },
+    {
+      "id": "pos.pos",
+      "path": "pos",
+      "permission": "subject.pos.pos.read"
+    },
+    {
+      "id": "pos.pos-order",
+      "path": "pos-order",
+      "permission": "subject.pos.pos-order.read"
+    },
+    {
+      "id": "pos.pos-tickets",
+      "path": "pos-tickets",
+      "permission": "subject.pos.pos-tickets.read"
+    }
+  ],
+  "menu": [
+    {
+      "id": "pos.root",
+      "label": "POS",
+      "order": 0,
+      "children": [
+        {
+          "id": "pos.pos-session",
+          "label": "Sesiones POS",
+          "order": 0,
+          "pageId": "pos.pos-session",
+          "path": "pos-session",
+          "permission": "subject.pos.pos-session.read"
+        },
+        {
+          "id": "pos.pos",
+          "label": "Estación POS",
+          "order": 0,
+          "pageId": "pos.pos",
+          "path": "pos",
+          "permission": "subject.pos.pos.read"
+        },
+        {
+          "id": "pos.pos-tickets",
+          "label": "Tickets",
+          "order": 0,
+          "pageId": "pos.pos-tickets",
+          "path": "pos-tickets",
+          "permission": "subject.pos.pos-tickets.read"
+        },
+        {
+          "id": "pos.pos-order",
+          "label": "Ordenes",
+          "order": 1,
+          "pageId": "pos.pos-order",
+          "path": "pos-order",
+          "permission": "subject.pos.pos-order.read"
+        }
+      ]
+    }
+  ],
+  "storage": {
+    "domain": "shared-nox-postgres"
+  },
+  "resources": {
+    "pos-session": "pos_session",
+    "pos": "pos",
+    "pos-order": "pos_order",
+    "pos-tickets": "pos_tickets"
+  }
+}

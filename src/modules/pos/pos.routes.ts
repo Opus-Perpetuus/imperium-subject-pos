@@ -1,0 +1,51 @@
+import { define_crud, define_module } from "@opus-perpetuus/imperium-core-kit";
+import { pos_pages } from "./pos.pages.ts";
+import { pos_tables } from "./pos.tables.ts";
+
+export const pos_module = define_module({
+  resource: "pos",
+  labels: {
+    singular: "Estación POS",
+    plural: "Estación POS",
+    read: "Ver Estación POS",
+    write: "Editar Estación POS",
+  },
+  routes: define_crud({
+    resource: "pos",
+    table: "pos",
+    soft_delete: true,
+    soft_delete_field: "is_active",
+    history: true,
+    default_sort: "name:asc",
+    id_prefix: "pos",
+    fields: {
+      name: { type: "string", required: true, search: true },
+      description: { type: "string", search: true },
+      is_active: { type: "boolean" },
+      state: { type: "string" },
+      ref: { type: "string", search: true },
+      search_field: { type: "string", search: true },
+      created_by: { type: "string" },
+      custom_data: { type: "json" },
+      payload: { type: "json" },
+      reference: { type: "string", search: true },
+      partner_id: { type: "string", search: true },
+      partner_name: { type: "string", search: true },
+      partner_lastname: { type: "string", search: true },
+      partner_home: { type: "string", search: true },
+      date_order: { type: "string", search: true },
+      amount_total: { type: "number" },
+      lines: { type: "string", search: true },
+      sync: { type: "boolean" },
+      product_id: { type: "string", search: true },
+      product: { type: "string", search: true },
+      price_unit: { type: "number" },
+      quantity: { type: "number" },
+      sale_order_id: { type: "string", search: true },
+    },
+    options_map: { value: "id", label: "name" },
+  }),
+  tables: pos_tables,
+  pages: pos_pages,
+  menu: [],
+});
