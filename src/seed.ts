@@ -12,7 +12,7 @@ export async function seed_demo(ctx: {
   await ctx.data.insert("pos_session", {
     id: new_id("pos-sess"),
     name: "Sesiones POS (ejemplo)",
-    description: "Registro semilla del súbdito. Sustituye al migrar desde Mongo.",
+    description: "Registro semilla de la app. Sustituye al migrar desde Mongo.",
     is_active: true,
     ref: "seed-pos",
     created_at: ts,
