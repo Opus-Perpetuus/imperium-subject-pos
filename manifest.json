@@ -47,6 +47,51 @@
       "label": "Editar Tickets"
     }
   ],
+  "menu": [
+    {
+      "id": "pos.root",
+      "label": "POS",
+      "order": 0,
+      "children": [
+        {
+          "id": "pos.pos-session",
+          "label": "Sesiones POS",
+          "pageId": "pos.pos-session",
+          "order": 0,
+          "path": "pos-session",
+          "permission": "subject.pos.pos-session.read",
+          "icon": "document"
+        },
+        {
+          "id": "pos.pos",
+          "label": "Estación POS",
+          "pageId": "pos.pos",
+          "order": 0,
+          "path": "pos",
+          "permission": "subject.pos.pos.read",
+          "icon": "document"
+        },
+        {
+          "id": "pos.pos-tickets",
+          "label": "Tickets",
+          "pageId": "pos.pos-tickets",
+          "order": 0,
+          "path": "pos-tickets",
+          "permission": "subject.pos.pos-tickets.read",
+          "icon": "document"
+        },
+        {
+          "id": "pos.pos-order",
+          "label": "Ordenes",
+          "pageId": "pos.pos-order",
+          "order": 1,
+          "path": "pos-order",
+          "permission": "subject.pos.pos-order.read",
+          "icon": "document"
+        }
+      ]
+    }
+  ],
   "pages": [
     {
       "id": "pos.pos-session",
@@ -69,54 +114,14 @@
       "permission": "subject.pos.pos-tickets.read"
     }
   ],
-  "menu": [
-    {
-      "id": "pos.root",
-      "label": "POS",
-      "order": 0,
-      "children": [
-        {
-          "id": "pos.pos-session",
-          "label": "Sesiones POS",
-          "order": 0,
-          "pageId": "pos.pos-session",
-          "path": "pos-session",
-          "permission": "subject.pos.pos-session.read"
-        },
-        {
-          "id": "pos.pos",
-          "label": "Estación POS",
-          "order": 0,
-          "pageId": "pos.pos",
-          "path": "pos",
-          "permission": "subject.pos.pos.read"
-        },
-        {
-          "id": "pos.pos-tickets",
-          "label": "Tickets",
-          "order": 0,
-          "pageId": "pos.pos-tickets",
-          "path": "pos-tickets",
-          "permission": "subject.pos.pos-tickets.read"
-        },
-        {
-          "id": "pos.pos-order",
-          "label": "Ordenes",
-          "order": 1,
-          "pageId": "pos.pos-order",
-          "path": "pos-order",
-          "permission": "subject.pos.pos-order.read"
-        }
-      ]
-    }
-  ],
   "storage": {
-    "domain": "shared-nox-postgres"
+    "domain": "shared-nox-postgres",
+    "files": false
   },
   "resources": {
-    "pos-session": "pos_session",
+    "pos-session": "pos-session",
     "pos": "pos",
-    "pos-order": "pos_order",
-    "pos-tickets": "pos_tickets"
+    "pos-order": "pos-order",
+    "pos-tickets": "pos-tickets"
   }
 }
