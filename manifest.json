@@ -2,8 +2,8 @@
   "id": "SUBJECT-pos",
   "technicalId": "subject-pos",
   "name": "POS",
-  "version": "0.1.2",
-  "image": "ghcr.io/opus-perpetuus/subject-pos:0.1.2",
+  "version": "0.2.0",
+  "image": "ghcr.io/opus-perpetuus/subject-pos:0.2.0",
   "compat": {
     "nox": ">=0.5.0",
     "kit": "^0.5.0"
