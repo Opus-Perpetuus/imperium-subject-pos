@@ -123,5 +123,9 @@
     "pos": "pos",
     "pos-order": "pos-order",
     "pos-tickets": "pos-tickets"
-  }
+  },
+  "dependsOn": [
+    "subject-almacen",
+    "subject-rh"
+  ]
 }

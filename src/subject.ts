@@ -13,6 +13,7 @@ export const SUBJECT = define_subject({
   image: `ghcr.io/opus-perpetuus/subject-pos:${pkg.version}`,
   compat: { nox: ">=0.5.0", kit: "^0.5.0" },
   schema_version: 1,
+  dependsOn: ["subject-almacen", "subject-rh"],
   menu_root: {
     id: "pos.root",
     label: "POS",
