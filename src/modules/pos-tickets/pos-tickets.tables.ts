@@ -20,6 +20,7 @@ export const pos_tickets_tables: KirletTableDecl[] = [
       { name: "ticket_type", type: "text" },
       { name: "pos_session", type: "text" },
       { name: "subtotal", type: "real" },
+      { name: "discount_total", type: "real" },
       { name: "total_paid", type: "real" },
       { name: "change", type: "real" },
       { name: "client_id", type: "text" },
