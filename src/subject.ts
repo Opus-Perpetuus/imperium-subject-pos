@@ -4,6 +4,7 @@ import { pos_session_module } from "./modules/pos-session/pos-session.routes.ts"
 import { pos_module } from "./modules/pos/pos.routes.ts";
 import { pos_order_module } from "./modules/pos-order/pos-order.routes.ts";
 import { pos_tickets_module } from "./modules/pos-tickets/pos-tickets.routes.ts";
+import { pos_promotion_module } from "./modules/pos-promotion/pos-promotion.routes.ts";
 import { seed_demo } from "./seed.ts";
 
 export const SUBJECT = define_subject({
@@ -12,14 +13,14 @@ export const SUBJECT = define_subject({
   version: pkg.version,
   image: `ghcr.io/opus-perpetuus/subject-pos:${pkg.version}`,
   compat: { nox: ">=0.5.0", kit: "^0.5.0" },
-  schema_version: 1,
+  schema_version: 2,
   dependsOn: ["subject-almacen", "subject-rh"],
   menu_root: {
     id: "pos.root",
     label: "POS",
     order: 0,
   },
-  modules: [pos_session_module, pos_module, pos_order_module, pos_tickets_module],
+  modules: [pos_session_module, pos_module, pos_order_module, pos_tickets_module, pos_promotion_module],
   seed: seed_demo,
 });
 
