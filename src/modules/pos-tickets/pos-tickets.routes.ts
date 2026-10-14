@@ -1,4 +1,8 @@
 import { define_crud, define_module } from "@opus-perpetuus/imperium-core-kit";
+import {
+  registrar_cargo_ticket,
+  validar_ticket_credito,
+} from "../pos-credit/pos-credit.service.ts";
 import { pos_tickets_pages } from "./pos-tickets.pages.ts";
 import { pos_tickets_tables } from "./pos-tickets.tables.ts";
 
@@ -47,8 +51,20 @@ export const pos_tickets_module = define_module({
       withdrawal_amount: { type: "number" },
       withdrawal_reason: { type: "string", search: true },
       withdrawal_signature: { type: "string", search: true },
+      is_credit: { type: "boolean" },
+      credit_amount: { type: "number" },
     },
     options_map: { value: "id", label: "name" },
+    hooks: {
+      // El límite se rechaza antes de insertar el ticket; el cargo va después.
+      before_create: async (ctx, row) => {
+        await validar_ticket_credito(ctx.data, row);
+        return row;
+      },
+      after_create: async (ctx, row) => {
+        await registrar_cargo_ticket(ctx.data, row);
+      },
+    },
   }),
   tables: pos_tickets_tables,
   pages: pos_tickets_pages,
