@@ -1,6 +1,33 @@
-import { define_crud, define_module } from "@opus-perpetuus/imperium-core-kit";
+import {
+  define_crud,
+  define_module,
+  type KirletCtx,
+  type KirletRouteTable,
+} from "@opus-perpetuus/imperium-core-kit";
 import { pos_tickets_pages } from "./pos-tickets.pages.ts";
+import {
+  pos_tickets_after_create,
+  pos_tickets_before_create,
+  remember_ticket_payload,
+} from "./pos-tickets.stock.ts";
 import { pos_tickets_tables } from "./pos-tickets.tables.ts";
+
+/** El CRUD descarta `payload`; sin esto la venta no trae renglones. */
+function keep_ticket_payload(routes: KirletRouteTable): KirletRouteTable {
+  return routes.map((entry) => {
+    if (entry.pattern !== "POST /pos-tickets" || entry.raw) return entry;
+    const original = entry.handler as (ctx: KirletCtx) => Promise<unknown>;
+    return {
+      ...entry,
+      handler: async (ctx: KirletCtx) => {
+        const body = (await ctx.body<Record<string, unknown>>()) ?? {};
+        const next = { ...ctx, body: async () => body };
+        if (body.payload !== undefined) remember_ticket_payload(next, body.payload);
+        return original(next);
+      },
+    };
+  });
+}
 
 export const pos_tickets_module = define_module({
   resource: "pos-tickets",
@@ -10,7 +37,7 @@ export const pos_tickets_module = define_module({
     read: "Ver Tickets",
     write: "Editar Tickets",
   },
-  routes: define_crud({
+  routes: keep_ticket_payload(define_crud({
     resource: "pos-tickets",
     table: "pos_tickets",
     soft_delete: true,
@@ -18,6 +45,10 @@ export const pos_tickets_module = define_module({
     history: true,
     default_sort: "name:asc",
     id_prefix: "pos-tick",
+    hooks: {
+      before_create: pos_tickets_before_create,
+      after_create: pos_tickets_after_create,
+    },
     fields: {
       name: { type: "string", required: true, search: true },
       description: { type: "string", search: true },
@@ -49,7 +80,7 @@ export const pos_tickets_module = define_module({
       withdrawal_signature: { type: "string", search: true },
     },
     options_map: { value: "id", label: "name" },
-  }),
+  })),
   tables: pos_tickets_tables,
   pages: pos_tickets_pages,
   menu: [],
