@@ -1,6 +1,32 @@
-import { define_crud, define_module } from "@opus-perpetuus/imperium-core-kit";
+import { define_crud, define_module, type DomainRow } from "@opus-perpetuus/imperium-core-kit";
+import { normalize_payments } from "./pos-tickets.payments.ts";
 import { pos_tickets_pages } from "./pos-tickets.pages.ts";
 import { pos_tickets_tables } from "./pos-tickets.tables.ts";
+
+const AMOUNT_KEYS = ["cash_amount", "card_amount", "transfer_amount"] as const;
+
+/** Si el parche solo toca montos, no reutiliza el arreglo `payments` anterior. */
+function con_pagos(base: DomainRow, patch?: DomainRow): DomainRow {
+  const merged: DomainRow = patch ? { ...base, ...patch } : { ...base };
+  if (patch && !("payments" in patch) && AMOUNT_KEYS.some((key) => key in patch)) {
+    delete merged.payments;
+  }
+  return normalize_payments(merged);
+}
+
+function campos_pago(normalized: DomainRow, patch: DomainRow): DomainRow {
+  return {
+    ...patch,
+    payment_method: normalized.payment_method,
+    payments: normalized.payments,
+    cash_amount: normalized.cash_amount,
+    card_amount: normalized.card_amount,
+    transfer_amount: normalized.transfer_amount,
+    payment_reference: normalized.payment_reference,
+    total_paid: normalized.total_paid,
+    change: normalized.change,
+  };
+}
 
 export const pos_tickets_module = define_module({
   resource: "pos-tickets",
@@ -47,8 +73,18 @@ export const pos_tickets_module = define_module({
       withdrawal_amount: { type: "number" },
       withdrawal_reason: { type: "string", search: true },
       withdrawal_signature: { type: "string", search: true },
+      payment_method: { type: "string", search: true },
+      payments: { type: "json" },
+      cash_amount: { type: "number" },
+      card_amount: { type: "number" },
+      transfer_amount: { type: "number" },
+      payment_reference: { type: "string", search: true },
     },
     options_map: { value: "id", label: "name" },
+    hooks: {
+      before_create: (_ctx, row) => con_pagos(row),
+      before_update: (_ctx, _id, patch, existing) => campos_pago(con_pagos(existing, patch), patch),
+    },
   }),
   tables: pos_tickets_tables,
   pages: pos_tickets_pages,
