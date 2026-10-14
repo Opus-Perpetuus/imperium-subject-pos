@@ -45,6 +45,14 @@
     {
       "id": "subject.pos.pos-tickets.write",
       "label": "Editar Tickets"
+    },
+    {
+      "id": "subject.pos.pos-credit.read",
+      "label": "Ver crédito"
+    },
+    {
+      "id": "subject.pos.pos-credit.write",
+      "label": "Editar crédito"
     }
   ],
   "menu": [
@@ -88,6 +96,15 @@
           "path": "pos-order",
           "permission": "subject.pos.pos-order.read",
           "icon": "document"
+        },
+        {
+          "id": "pos.pos-credit",
+          "label": "Crédito",
+          "pageId": "pos.pos-credit",
+          "order": 2,
+          "path": "pos-credit",
+          "permission": "subject.pos.pos-credit.read",
+          "icon": "document"
         }
       ]
     }
@@ -112,6 +129,11 @@
       "id": "pos.pos-tickets",
       "path": "pos-tickets",
       "permission": "subject.pos.pos-tickets.read"
+    },
+    {
+      "id": "pos.pos-credit",
+      "path": "pos-credit",
+      "permission": "subject.pos.pos-credit.read"
     }
   ],
   "storage": {
@@ -122,7 +144,9 @@
     "pos-session": "pos-session",
     "pos": "pos",
     "pos-order": "pos-order",
-    "pos-tickets": "pos-tickets"
+    "pos-tickets": "pos-tickets",
+    "pos-credit": "pos-credit",
+    "pos-credit-account": "pos-credit"
   },
   "dependsOn": [
     "subject-almacen",

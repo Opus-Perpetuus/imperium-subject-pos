@@ -35,6 +35,8 @@ export const pos_tickets_tables: KirletTableDecl[] = [
       { name: "withdrawal_amount", type: "real" },
       { name: "withdrawal_reason", type: "text" },
       { name: "withdrawal_signature", type: "text" },
+      { name: "is_credit", type: "boolean", notNull: true, default: false },
+      { name: "credit_amount", type: "real", notNull: true, default: 0 },
     ],
     indexes: [
       { name: "idx_pos_tickets_name", columns: ["name"] },
