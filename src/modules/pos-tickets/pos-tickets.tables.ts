@@ -47,6 +47,8 @@ export const pos_tickets_tables: KirletTableDecl[] = [
       { name: "payments", type: "json" },
       // Apartados: abierto, liquidado o cancelado.
       { name: "layaway_status", type: "text" },
+      // Cotizaciones: abierta o convertida.
+      { name: "quote_status", type: "text" },
     ],
     indexes: [
       { name: "idx_pos_tickets_name", columns: ["name"] },
