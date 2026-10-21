@@ -35,10 +35,15 @@ export const pos_tickets_tables: KirletTableDecl[] = [
       { name: "withdrawal_amount", type: "real" },
       { name: "withdrawal_reason", type: "text" },
       { name: "withdrawal_signature", type: "text" },
+      // Devolución ligada a la venta original (aditivas; el núcleo valida y reingresa).
+      { name: "original_ticket", type: "text" },
+      { name: "restock_mode", type: "text" },
+      { name: "restock_result", type: "json" },
     ],
     indexes: [
       { name: "idx_pos_tickets_name", columns: ["name"] },
       { name: "idx_pos_tickets_active", columns: ["is_active"] },
+      { name: "idx_pos_tickets_original_ticket", columns: ["original_ticket"] },
     ],
   },
 ];
