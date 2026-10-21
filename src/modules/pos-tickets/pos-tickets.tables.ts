@@ -42,6 +42,9 @@ export const pos_tickets_tables: KirletTableDecl[] = [
       // Entrada de efectivo a caja (ticket ENTRADA_EFECTIVO).
       { name: "cash_in_amount", type: "real" },
       { name: "cash_in_reason", type: "text" },
+      // Formas de pago de la venta ([{method, amount, reference}]).
+      { name: "payment_method", type: "text" },
+      { name: "payments", type: "json" },
     ],
     indexes: [
       { name: "idx_pos_tickets_name", columns: ["name"] },
