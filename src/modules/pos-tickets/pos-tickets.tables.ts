@@ -39,6 +39,9 @@ export const pos_tickets_tables: KirletTableDecl[] = [
       { name: "original_ticket", type: "text" },
       { name: "restock_mode", type: "text" },
       { name: "restock_result", type: "json" },
+      // Entrada de efectivo a caja (ticket ENTRADA_EFECTIVO).
+      { name: "cash_in_amount", type: "real" },
+      { name: "cash_in_reason", type: "text" },
     ],
     indexes: [
       { name: "idx_pos_tickets_name", columns: ["name"] },
