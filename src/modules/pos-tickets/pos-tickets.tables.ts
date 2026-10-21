@@ -45,11 +45,14 @@ export const pos_tickets_tables: KirletTableDecl[] = [
       // Formas de pago de la venta ([{method, amount, reference}]).
       { name: "payment_method", type: "text" },
       { name: "payments", type: "json" },
+      // Apartados: abierto, liquidado o cancelado.
+      { name: "layaway_status", type: "text" },
     ],
     indexes: [
       { name: "idx_pos_tickets_name", columns: ["name"] },
       { name: "idx_pos_tickets_active", columns: ["is_active"] },
       { name: "idx_pos_tickets_original_ticket", columns: ["original_ticket"] },
+      { name: "idx_pos_tickets_client_id", columns: ["client_id"] },
     ],
   },
 ];
