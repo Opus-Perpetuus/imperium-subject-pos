@@ -49,6 +49,10 @@ export const pos_tickets_tables: KirletTableDecl[] = [
       { name: "layaway_status", type: "text" },
       // Cotizaciones: abierta o convertida.
       { name: "quote_status", type: "text" },
+      // Remisión con consecutivo propio y bitácora de reimpresiones ([{tipo, copia, fecha, usuario_id, usuario}]).
+      { name: "remision_numero", type: "real" },
+      { name: "remision_folio", type: "text" },
+      { name: "reprint_log", type: "json" },
     ],
     indexes: [
       { name: "idx_pos_tickets_name", columns: ["name"] },
