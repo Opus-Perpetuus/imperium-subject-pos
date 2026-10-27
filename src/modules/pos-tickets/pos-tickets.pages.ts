@@ -52,8 +52,8 @@ export const pos_tickets_pages: KirletPageDecl[] = [
           form: {
             fields: [
               { name: "name", component: "input-text", label: "Nombre", required: true },
-              // Mirror imperium-core state-fields.ts pos-tickets.state.
-              { name: "state", component: "input-status", label: "Estado", options: [{ value: "borrador", label: "Borrador", color: "#f59f00" }, { value: "confirmado", label: "Confirmado", color: "#0d6efd" }, { value: "facturado", label: "Facturado", color: "#198754" }, { value: "cancelado", label: "Cancelado", color: "#dc3545" }] },
+              // Opciones: status-option-control (pos-tickets.state; seed en status-seeds.ts).
+              { name: "state", component: "input-status", label: "Estado" },
               { name: "description", component: "input-textarea", label: "Descripción" },
               { name: "ref", component: "input-text", label: "Referencia (_ref)" },
               { name: "ticket_sequence", component: "input-text", label: "ticket sequence" },
