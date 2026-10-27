@@ -57,7 +57,8 @@ export const pos_session_pages: KirletPageDecl[] = [
               { name: "opening_date", component: "input-date", label: "Fecha de apertura" },
               { name: "cashier", component: "input-datalist", label: "Cajero", optionsSource: "api://m/subject-rh/employee?as=options&limite=1000" },
               { name: "branch_office", component: "input-datalist", label: "Sucursal", optionsSource: "api://m/subject-configuracion/branchoffice?as=options&limite=1000" },
-              { name: "status", component: "input-text", label: "Estado" },
+              // Mirror imperium-core state-fields.ts pos-session.status.
+              { name: "status", component: "input-status", label: "Estado", options: [{ value: "abierta", label: "Abierta", color: "#ffc107" }, { value: "cerrada", label: "Cerrada", color: "#6c757d" }, { value: "cancelada", label: "Cancelada", color: "#dc3545" }] },
               { name: "closing_date", component: "input-date", label: "Fecha de cierre" },
               { name: "cash_register_opening_money", component: "input-money", label: "Fondo inicial" },
               { name: "on_use", component: "input-checkbox", label: "En uso" },
