@@ -52,6 +52,8 @@ export const pos_order_pages: KirletPageDecl[] = [
           form: {
             fields: [
               { name: "name", component: "input-text", label: "Nombre", required: true },
+              // Mirror imperium-core state-fields.ts pos-order.state.
+              { name: "state", component: "input-status", label: "Estado", options: [{ value: "BORRADOR", label: "Borrador", color: "#ffc107" }, { value: "CONFIRMADO", label: "Confirmado", color: "#0dcaf0" }, { value: "HECHO", label: "Hecho", color: "#198754" }, { value: "CANCELADO", label: "Cancelado", color: "#dc3545" }] },
               { name: "description", component: "input-textarea", label: "Descripción" },
               { name: "ref", component: "input-text", label: "Referencia (_ref)" },
               { name: "reference", component: "input-text", label: "reference" },
