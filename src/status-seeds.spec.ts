@@ -8,6 +8,7 @@ describe("status seeds", () => {
       const v = s.options.map((o) => o.value);
       expect(new Set(v).size).toBe(v.length);
       expect(s.options.every((o) => o.field_name === s.status_fields?.[0])).toBe(true);
+      expect(s.options.every((o) => /^#[0-9a-f]{6}$/.test(o.color) && /^fas fa-[a-z-]+$/.test(o.icon ?? ""))).toBe(true);
     }
   });
   test("input-status sin options literales", () => {
