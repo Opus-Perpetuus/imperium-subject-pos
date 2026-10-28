@@ -1,6 +1,6 @@
 {
   "name": "@opus-perpetuus/imperium-core-kit",
-  "version": "13.76.1",
+  "version": "13.108.4",
   "private": false,
   "type": "module",
   "main": "./src/index.ts",
@@ -33,15 +33,13 @@
     "typescript": "^5.7.3"
   },
   "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "access": "public"
   },
   "description": "Imperium Core kit — subject (app) contracts, forked from kirel-nox-kit 0.5.18",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Opus-Perpetuus/kirel-nox.git",
-    "directory": "libs/kit"
+    "url": "https://github.com/Opus-Perpetuus/imperium-core-kit.git"
   },
   "files": [
     "src",
