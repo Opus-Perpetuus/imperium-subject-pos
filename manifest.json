@@ -2,8 +2,8 @@
   "id": "SUBJECT-pos",
   "technicalId": "subject-pos",
   "name": "POS",
-  "version": "0.11.3",
-  "image": "ghcr.io/opus-perpetuus/subject-pos:0.11.3",
+  "version": "0.12.0",
+  "image": "ghcr.io/opus-perpetuus/subject-pos:0.12.0",
   "compat": {
     "nox": ">=0.5.0",
     "kit": "^0.5.0"
@@ -45,6 +45,22 @@
     {
       "id": "subject.pos.pos-tickets.write",
       "label": "Editar Tickets"
+    },
+    {
+      "id": "subject.pos.pos-credit.read",
+      "label": "Ver crédito"
+    },
+    {
+      "id": "subject.pos.pos-credit.write",
+      "label": "Editar crédito"
+    },
+    {
+      "id": "subject.pos.pos-promotion.read",
+      "label": "Ver Promociones"
+    },
+    {
+      "id": "subject.pos.pos-promotion.write",
+      "label": "Editar Promociones"
     }
   ],
   "menu": [
@@ -184,6 +200,41 @@
         },
         "permission": "subject.pos.pos-tickets.read"
       }
+    },
+    {
+      "id": "pos.pos-credit",
+      "path": "pos-credit",
+      "permission": "subject.pos.pos-credit.read",
+      "leaf": {
+        "kind": "crud",
+        "appBase": "pos-credit",
+        "icon": "fa-hand-holding-usd",
+        "listHeaders": {
+          "es": {
+            "name": "Nombre",
+            "is_active": "Activa"
+          }
+        },
+        "permission": "subject.pos.pos-credit.read"
+      }
+    },
+    {
+      "id": "pos.pos-promotion",
+      "path": "pos-promotion",
+      "permission": "subject.pos.pos-promotion.read",
+      "leaf": {
+        "kind": "crud",
+        "appBase": "pos-promotion",
+        "icon": "fa-tags",
+        "listHeaders": {
+          "es": {
+            "name": "Nombre",
+            "kind": "Tipo",
+            "is_active": "Activa"
+          }
+        },
+        "permission": "subject.pos.pos-promotion.read"
+      }
     }
   ],
   "storage": {
@@ -194,7 +245,10 @@
     "pos-session": "pos-session",
     "pos": "pos",
     "pos-order": "pos-order",
-    "pos-tickets": "pos-tickets"
+    "pos-tickets": "pos-tickets",
+    "pos-credit": "pos-credit",
+    "pos-credit-account": "pos-credit",
+    "pos-promotion": "pos-promotion"
   },
   "dependsOn": [
     "subject-almacen",
