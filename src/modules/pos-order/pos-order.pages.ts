@@ -10,6 +10,38 @@ export const pos_order_pages: KirletPageDecl[] = [
     id: "pos.pos-order",
     path: "pos-order",
     permission: "subject.pos.pos-order.read",
+    leaf: {
+      "kind": "crud",
+      "appBase": "pos-order",
+      "icon": "fa-basket-shopping",
+      "listHeaders": {
+        "es": {
+          "reference": "Referencia",
+          "partner_name": "Nombre",
+          "partner_lastname": "Apellido",
+          "date_order": "Fecha",
+          "amount_total": "Total"
+        }
+      },
+      "formLabels": {
+        "es": {
+          "reference": "Referencia",
+          "partner_id": "Cliente (id)",
+          "partner_name": "Nombre del cliente",
+          "partner_lastname": "Apellido del cliente",
+          "partner_home": "Domicilio del cliente",
+          "date_order": "Fecha de la orden",
+          "amount_total": "Total",
+          "lines": "Líneas",
+          "sync": "Sincronizada",
+          "product_id": "Producto (id)",
+          "product": "Producto",
+          "price_unit": "Precio unitario",
+          "quantity": "Cantidad",
+          "sale_order_id": "Pedido de venta (id)"
+        }
+      }
+    },
     build: () =>
       build_feature_shell_page({
         id: "pos.pos-order",

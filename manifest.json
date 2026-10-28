@@ -1,6 +1,4 @@
 {
-  "$schema": "https://schemas.opus-perpetuus.dev/imperium/kirlet-manifest/1.0.json",
-  "manifestVersion": 1,
   "id": "SUBJECT-pos",
   "technicalId": "subject-pos",
   "name": "POS",
@@ -109,7 +107,8 @@
             "state": "Estado",
             "is_active": "Activa"
           }
-        }
+        },
+        "permission": "subject.pos.pos-session.read"
       }
     },
     {
@@ -126,7 +125,8 @@
             "state": "Estado",
             "is_active": "Activa"
           }
-        }
+        },
+        "permission": "subject.pos.pos.read"
       }
     },
     {
@@ -163,7 +163,8 @@
             "quantity": "Cantidad",
             "sale_order_id": "Pedido de venta (id)"
           }
-        }
+        },
+        "permission": "subject.pos.pos-order.read"
       }
     },
     {
@@ -180,7 +181,8 @@
             "state": "Estado",
             "is_active": "Activa"
           }
-        }
+        },
+        "permission": "subject.pos.pos-tickets.read"
       }
     }
   ],
@@ -197,5 +199,7 @@
   "dependsOn": [
     "subject-almacen",
     "subject-rh"
-  ]
+  ],
+  "manifestVersion": 1,
+  "$schema": "https://schemas.opus-perpetuus.dev/imperium/kirlet-manifest/1.0.json"
 }

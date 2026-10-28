@@ -10,6 +10,18 @@ export const pos_session_pages: KirletPageDecl[] = [
     id: "pos.pos-session",
     path: "pos-session",
     permission: "subject.pos.pos-session.read",
+    leaf: {
+      "kind": "crud",
+      "appBase": "pos-session",
+      "icon": "fa-cash-register",
+      "listHeaders": {
+        "es": {
+          "name": "Nombre",
+          "state": "Estado",
+          "is_active": "Activa"
+        }
+      }
+    },
     build: () =>
       build_feature_shell_page({
         id: "pos.pos-session",

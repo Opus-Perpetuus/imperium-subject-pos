@@ -10,6 +10,18 @@ export const pos_pages: KirletPageDecl[] = [
     id: "pos.pos",
     path: "pos",
     permission: "subject.pos.pos.read",
+    leaf: {
+      "kind": "crud",
+      "appBase": "pos",
+      "icon": "fa-store",
+      "listHeaders": {
+        "es": {
+          "name": "Nombre",
+          "state": "Estado",
+          "is_active": "Activa"
+        }
+      }
+    },
     build: () =>
       build_feature_shell_page({
         id: "pos.pos",
