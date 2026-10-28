@@ -7,6 +7,7 @@ import {
   type KirletCtx,
   type KirletRouteTable,
 } from "@opus-perpetuus/imperium-core-kit";
+import { apply_promotions, type PromotionRule } from "../pos-promotion/pos-promotion.logic.ts";
 import {
   registrar_cargo_ticket,
   validar_ticket_credito,
@@ -46,6 +47,58 @@ function campos_pago(normalized: DomainRow, patch: DomainRow): DomainRow {
     total_paid: normalized.total_paid,
     change: normalized.change,
   };
+}
+
+function payload_object(payload: unknown): Record<string, unknown> | null {
+  if (typeof payload === "string") {
+    try {
+      payload = JSON.parse(payload);
+    } catch {
+      return null;
+    }
+  }
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) return null;
+  return payload as Record<string, unknown>;
+}
+
+/** Recalcula renglones de payload.items. Si no se pueden leer las promos, la venta sigue. */
+async function apply_ticket_promotions(ctx: KirletCtx, row: DomainRow): Promise<DomainRow> {
+  const payload = payload_object(row.payload);
+  if (!payload) return row;
+  const items = payload.items;
+  if (!Array.isArray(items) || items.length === 0) return row;
+  try {
+    const promos = (await ctx.data.findMany("pos_promotion", {})) as PromotionRule[];
+    const quote = apply_promotions(
+      items.map((raw) => {
+        const item = raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
+        return {
+          product_id: String(item.product_id ?? item.item_id ?? ""),
+          quantity: Number(item.quantity ?? 0),
+          unit_price: Number(item.unit_price ?? 0),
+        };
+      }),
+      promos,
+      new Date(),
+    );
+    const next_items = items.map((raw, index) => {
+      const item = raw && typeof raw === "object" ? { ...(raw as Record<string, unknown>) } : {};
+      const priced = quote.lines[index];
+      if (!priced) return item;
+      item.discount = priced.discount;
+      item.total = priced.total;
+      item.promotion_id = priced.promotion_id;
+      if (priced.discount > 0) item.price_origin = "promocion";
+      return item;
+    });
+    return {
+      ...row,
+      discount_total: quote.discount_total,
+      payload: { ...payload, items: next_items },
+    };
+  } catch {
+    return row;
+  }
 }
 
 /**
@@ -106,9 +159,11 @@ export const pos_tickets_module = define_module({
         history: true,
         default_sort: "name:asc",
         id_prefix: "pos-tick",
+        unknown_to_payload: true,
         hooks: {
           before_create: async (ctx, row) => {
-            const con_pago = con_pagos(row);
+            const con_promo = await apply_ticket_promotions(ctx, row);
+            const con_pago = con_pagos(con_promo);
             await validar_ticket_credito(ctx.data, con_pago);
             return pos_tickets_before_create(ctx, con_pago);
           },
@@ -133,6 +188,7 @@ export const pos_tickets_module = define_module({
           ticket_type: { type: "string", search: true },
           pos_session: { type: "string", search: true },
           subtotal: { type: "number" },
+          discount_total: { type: "number" },
           total_paid: { type: "number" },
           change: { type: "number" },
           client_id: { type: "string", search: true },
