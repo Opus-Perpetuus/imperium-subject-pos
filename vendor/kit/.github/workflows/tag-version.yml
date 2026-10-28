@@ -1,0 +1,103 @@
+name: tag-version
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+  packages: write
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    # `secrets` no es un contexto valido en `steps.*.if`, pero si en `job.env`:
+    # se resuelve aqui a "true"/"false" y los pasos miran esta variable.
+    env:
+      HAY_NPM_TOKEN: ${{ secrets.NPM_TOKEN != '' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Etiquetar la version del producto
+        id: version
+        run: |
+          VERSION="$(jq -r .version package.json)"
+          if [ -z "$VERSION" ] || [ "$VERSION" = "null" ]; then
+            echo "package.json sin version" >&2
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          if git rev-parse -q --verify "refs/tags/v$VERSION" >/dev/null; then
+            echo "v$VERSION ya existe." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "v$VERSION" -m "v$VERSION"
+          git push origin "v$VERSION"
+          echo "Etiquetada v$VERSION (repo imperium-core-kit)." >> "$GITHUB_STEP_SUMMARY"
+
+      # El kit es la unica pieza del producto que se consume por npm, no por
+      # imagen: las apps lo vendorizan desde el registro. Etiquetar sin publicar
+      # dejaba la version en el tag y en ningun sitio mas —npm seguia en 0.1.0
+      # con el producto en 13.27.0.
+      #
+      # GitHub Packages (npm.pkg.github.com) es el registro que siempre esta:
+      # publica con el GITHUB_TOKEN del repo, en cada push a main, si esa
+      # version aun no esta. El registro lo fija el .npmrc que escribe
+      # setup-node (package.json no lleva publishConfig.registry a proposito:
+      # pisaria a --registry y todo iria al mismo sitio).
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@opus-perpetuus'
+      - name: Publicar en GitHub Packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          VERSION="${{ steps.version.outputs.version }}"
+          NOMBRE="$(jq -r .name package.json)"
+          REG=https://npm.pkg.github.com
+          if npm view "$NOMBRE@$VERSION" version --registry="$REG" >/dev/null 2>&1; then
+            echo "$NOMBRE@$VERSION ya esta en GitHub Packages." >> "$GITHUB_STEP_SUMMARY"
+          else
+            npm publish
+            echo "Publicada $NOMBRE@$VERSION en GitHub Packages." >> "$GITHUB_STEP_SUMMARY"
+          fi
+          npm view "$NOMBRE" version --registry="$REG"
+
+      - uses: actions/setup-node@v4
+        if: env.HAY_NPM_TOKEN == 'true'
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Publicar en npm
+        if: env.HAY_NPM_TOKEN == 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -euo pipefail
+          VERSION="${{ steps.version.outputs.version }}"
+          NOMBRE="$(jq -r .name package.json)"
+          # Republicar una version ya subida es un error duro en npm; aqui es
+          # solo "no habia nada que hacer" (p. ej. un re-run del workflow).
+          if npm view "$NOMBRE@$VERSION" version >/dev/null 2>&1; then
+            echo "$NOMBRE@$VERSION ya esta en npm." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          npm publish --access public
+          echo "Publicada $NOMBRE@$VERSION en npm." >> "$GITHUB_STEP_SUMMARY"
+      - name: Sin credencial de npm
+        if: env.HAY_NPM_TOKEN != 'true'
+        run: |
+          {
+            echo "### npm: no publicado"
+            echo
+            echo "Falta el secreto \`NPM_TOKEN\` en este repo, asi que solo se etiqueto."
+            echo "Crearlo con un token de automatizacion con permiso sobre"
+            echo "\`@opus-perpetuus\`; desde entonces cada version se publica sola."
+          } >> "$GITHUB_STEP_SUMMARY"
