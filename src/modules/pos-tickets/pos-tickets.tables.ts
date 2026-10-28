@@ -20,8 +20,15 @@ export const pos_tickets_tables: KirletTableDecl[] = [
       { name: "ticket_type", type: "text" },
       { name: "pos_session", type: "text" },
       { name: "subtotal", type: "real" },
+      { name: "discount_total", type: "real" },
       { name: "total_paid", type: "real" },
       { name: "change", type: "real" },
+      { name: "payment_method", type: "text" },
+      { name: "payments", type: "json" },
+      { name: "cash_amount", type: "real" },
+      { name: "card_amount", type: "real" },
+      { name: "transfer_amount", type: "real" },
+      { name: "payment_reference", type: "text" },
       { name: "client_id", type: "text" },
       { name: "client_name", type: "text" },
       { name: "client_lastname", type: "text" },
@@ -42,9 +49,6 @@ export const pos_tickets_tables: KirletTableDecl[] = [
       // Entrada de efectivo a caja (ticket ENTRADA_EFECTIVO).
       { name: "cash_in_amount", type: "real" },
       { name: "cash_in_reason", type: "text" },
-      // Formas de pago de la venta ([{method, amount, reference}]).
-      { name: "payment_method", type: "text" },
-      { name: "payments", type: "json" },
       // Apartados: abierto, liquidado o cancelado.
       { name: "layaway_status", type: "text" },
       // Cotizaciones: abierta o convertida.
@@ -53,6 +57,8 @@ export const pos_tickets_tables: KirletTableDecl[] = [
       { name: "remision_numero", type: "real" },
       { name: "remision_folio", type: "text" },
       { name: "reprint_log", type: "json" },
+      { name: "is_credit", type: "boolean", notNull: true, default: false },
+      { name: "credit_amount", type: "real", notNull: true, default: 0 },
     ],
     indexes: [
       { name: "idx_pos_tickets_name", columns: ["name"] },
