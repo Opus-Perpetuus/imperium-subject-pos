@@ -12,7 +12,8 @@ export const SUBJECT = define_subject({
   version: pkg.version,
   image: `ghcr.io/opus-perpetuus/subject-pos:${pkg.version}`,
   compat: { nox: ">=0.5.0", kit: "^0.5.0" },
-  schema_version: 1,
+  // 2: columnas de forma de pago en pos_tickets. El kit las agrega con ADD COLUMN IF NOT EXISTS.
+  schema_version: 2,
   dependsOn: ["subject-almacen", "subject-rh"],
   menu_root: {
     id: "pos.root",
