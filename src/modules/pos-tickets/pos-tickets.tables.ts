@@ -48,9 +48,6 @@ export const pos_tickets_tables: KirletTableDecl[] = [
       // Entrada de efectivo a caja (ticket ENTRADA_EFECTIVO).
       { name: "cash_in_amount", type: "real" },
       { name: "cash_in_reason", type: "text" },
-      // Formas de pago de la venta ([{method, amount, reference}]).
-      { name: "payment_method", type: "text" },
-      { name: "payments", type: "json" },
       // Apartados: abierto, liquidado o cancelado.
       { name: "layaway_status", type: "text" },
       // Cotizaciones: abierta o convertida.
@@ -59,6 +56,8 @@ export const pos_tickets_tables: KirletTableDecl[] = [
       { name: "remision_numero", type: "real" },
       { name: "remision_folio", type: "text" },
       { name: "reprint_log", type: "json" },
+      { name: "is_credit", type: "boolean", notNull: true, default: false },
+      { name: "credit_amount", type: "real", notNull: true, default: 0 },
     ],
     indexes: [
       { name: "idx_pos_tickets_name", columns: ["name"] },

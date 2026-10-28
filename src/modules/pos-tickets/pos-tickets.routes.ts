@@ -7,6 +7,10 @@ import {
   type KirletCtx,
   type KirletRouteTable,
 } from "@opus-perpetuus/imperium-core-kit";
+import {
+  registrar_cargo_ticket,
+  validar_ticket_credito,
+} from "../pos-credit/pos-credit.service.ts";
 import { normalize_payments } from "./pos-tickets.payments.ts";
 import { pos_tickets_pages } from "./pos-tickets.pages.ts";
 import {
@@ -103,9 +107,15 @@ export const pos_tickets_module = define_module({
         default_sort: "name:asc",
         id_prefix: "pos-tick",
         hooks: {
-          before_create: async (ctx, row) =>
-            pos_tickets_before_create(ctx, con_pagos(row)),
-          after_create: pos_tickets_after_create,
+          before_create: async (ctx, row) => {
+            const con_pago = con_pagos(row);
+            await validar_ticket_credito(ctx.data, con_pago);
+            return pos_tickets_before_create(ctx, con_pago);
+          },
+          after_create: async (ctx, row) => {
+            await pos_tickets_after_create(ctx, row);
+            await registrar_cargo_ticket(ctx.data, row);
+          },
           before_update: (_ctx, _id, patch, existing) =>
             campos_pago(con_pagos(existing, patch), patch),
         },
@@ -144,6 +154,8 @@ export const pos_tickets_module = define_module({
           card_amount: { type: "number" },
           transfer_amount: { type: "number" },
           payment_reference: { type: "string", search: true },
+          is_credit: { type: "boolean" },
+          credit_amount: { type: "number" },
         },
         options_map: { value: "id", label: "name" },
       }),
