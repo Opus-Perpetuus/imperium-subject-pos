@@ -32,6 +32,14 @@ export function remember_ticket_payload(ctx: object, payload: unknown): void {
   pending_payload.set(ctx, payload);
 }
 
+/** Reponer `payload` si el CRUD lo descartó antes de los hooks. */
+export function with_pending_payload(ctx: object, row: DomainRow): DomainRow {
+  if ((row.payload == null || row.payload === "") && pending_payload.has(ctx)) {
+    return { ...row, payload: pending_payload.get(ctx) };
+  }
+  return row;
+}
+
 /** `null` vuelve a usar `call_subject`. */
 export function set_almacen_call(fn: AlmacenCall | null): void {
   almacen_call = fn ?? call_subject;

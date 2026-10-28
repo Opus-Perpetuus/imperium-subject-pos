@@ -21,6 +21,7 @@ import {
   sync_pos_tickets_stock,
   TicketYaExiste,
   find_ticket_por_clave,
+  with_pending_payload,
 } from "./pos-tickets.stock.ts";
 import { pos_tickets_tables } from "./pos-tickets.tables.ts";
 
@@ -162,7 +163,8 @@ export const pos_tickets_module = define_module({
         unknown_to_payload: true,
         hooks: {
           before_create: async (ctx, row) => {
-            const con_promo = await apply_ticket_promotions(ctx, row);
+            const con_payload = with_pending_payload(ctx, row);
+            const con_promo = await apply_ticket_promotions(ctx, con_payload);
             const con_pago = con_pagos(con_promo);
             await validar_ticket_credito(ctx.data, con_pago);
             return pos_tickets_before_create(ctx, con_pago);
