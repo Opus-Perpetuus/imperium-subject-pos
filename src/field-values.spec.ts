@@ -7,8 +7,8 @@ const MARCA = "FUGA-NO-DEBE-SALIR";
 const blob = { token: MARCA, api_key: MARCA };
 
 const casos: Array<{ base: string; table: string; row: Record<string, unknown>; denegados: string[] }> = [
-  { base: "pos", table: "pos", row: {}, denegados: ["custom_data", "payload"] },
-  { base: "pos-order", table: "pos_order", row: {}, denegados: ["custom_data", "payload"] },
+  { base: "pos", table: "pos", row: { partner_home: MARCA }, denegados: ["custom_data", "payload", "partner_home"] },
+  { base: "pos-order", table: "pos_order", row: { partner_home: MARCA }, denegados: ["custom_data", "payload", "partner_home"] },
   { base: "pos-promotion", table: "pos_promotion", row: { kind: "nxm" }, denegados: ["custom_data", "payload"] },
   {
     base: "pos-session",
@@ -19,8 +19,8 @@ const casos: Array<{ base: string; table: string; row: Record<string, unknown>; 
   {
     base: "pos-tickets",
     table: "pos_tickets",
-    row: { payments: [blob], withdrawal_signature: `data:image/png;base64,${MARCA}`, reprint_log: [blob] },
-    denegados: ["custom_data", "payload", "payments", "withdrawal_signature", "reprint_log"],
+    row: { payments: [blob], withdrawal_signature: `data:image/png;base64,${MARCA}`, reprint_log: [blob], client_home: MARCA },
+    denegados: ["custom_data", "payload", "payments", "withdrawal_signature", "reprint_log", "client_home"],
   },
   {
     base: "pos-credit-account",
