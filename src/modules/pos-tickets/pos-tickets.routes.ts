@@ -114,7 +114,7 @@ function keep_ticket_payload(routes: KirletRouteTable): KirletRouteTable {
       ...entry,
       handler: async (ctx: KirletCtx) => {
         const body = (await ctx.body<Record<string, unknown>>()) ?? {};
-        const next = { ...ctx, body: async () => body };
+        const next: KirletCtx = { ...ctx, body: (async () => body) as KirletCtx["body"] };
         if (body.payload !== undefined) remember_ticket_payload(next, body.payload);
         try {
           return await original(next);
@@ -205,7 +205,8 @@ export const pos_tickets_module = define_module({
           price_origin: { type: "string", search: true },
           withdrawal_amount: { type: "number" },
           withdrawal_reason: { type: "string", search: true },
-          withdrawal_signature: { type: "string", search: true },
+          // Firma manuscrita (data URL): el kit ya la niega por nombre (signature, core 90aa24af3); secret explícito por si cambia el nombre.
+          withdrawal_signature: { type: "string", search: true, secret: true },
           payment_method: { type: "string", search: true },
           payments: { type: "json" },
           cash_amount: { type: "number" },

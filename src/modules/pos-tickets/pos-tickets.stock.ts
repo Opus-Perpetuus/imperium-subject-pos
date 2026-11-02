@@ -472,7 +472,7 @@ export async function pos_tickets_before_create(
     const existing = await find_ticket_por_clave(ctx.data, next);
     if (existing) throw new TicketYaExiste(existing);
   }
-  const custom_data = { ...custom_of(next), stock_status: "pending" };
+  const custom_data: Record<string, unknown> = { ...custom_of(next), stock_status: "pending" };
   delete custom_data.stock_applied_at;
   delete custom_data.stock_error;
   return { ...next, custom_data };

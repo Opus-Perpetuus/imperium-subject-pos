@@ -12,7 +12,7 @@ export const pos_credit_pages: KirletPageDecl[] = [
     permission: "subject.pos.pos-credit.read",
     leaf: {
       "kind": "crud",
-      "appBase": "pos-credit",
+      "appBase": "pos-credit-account",
       "icon": "fa-hand-holding-usd",
       "listHeaders": {
         "es": {
