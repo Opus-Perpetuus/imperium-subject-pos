@@ -114,7 +114,7 @@ function keep_ticket_payload(routes: KirletRouteTable): KirletRouteTable {
       ...entry,
       handler: async (ctx: KirletCtx) => {
         const body = (await ctx.body<Record<string, unknown>>()) ?? {};
-        const next = { ...ctx, body: async () => body };
+        const next: KirletCtx = { ...ctx, body: (async () => body) as KirletCtx["body"] };
         if (body.payload !== undefined) remember_ticket_payload(next, body.payload);
         try {
           return await original(next);

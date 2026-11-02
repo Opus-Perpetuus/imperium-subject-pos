@@ -7,6 +7,7 @@
     "start": "bun run src/server.ts",
     "dev": "bun --watch run src/server.ts",
     "test": "SUBJECT_AUTH=off KIRLET_AUTH=off bun test --max-concurrency 1",
+    "typecheck": "tsc --noEmit",
     "manifest:emit": "bun run scripts/emit-manifest.ts",
     "docker:build": "docker build --build-context kit=../../kit -t ghcr.io/opus-perpetuus/subject-pos:0.1.0 -t ghcr.io/opus-perpetuus/subject-pos:latest .",
     "local": "bun run scripts/dev-local.ts"
