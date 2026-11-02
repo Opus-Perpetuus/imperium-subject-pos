@@ -30,4 +30,21 @@ describe("subject-pos conformance", () => {
     expect(menu.length).toBeGreaterThan(0);
     server.stop();
   });
+
+  test("cada leaf crud apunta a una ruta de listado existente", async () => {
+    const server = create_kirlet_test_context(SUBJECT);
+    const pages = SUBJECT.manifest().pages ?? [];
+    const leaves = pages
+      .map((p: { leaf?: { kind?: string; appBase?: string } }) => p.leaf)
+      .filter((l) => l?.kind === "crud" && l.appBase);
+    expect(leaves.length).toBeGreaterThan(0);
+    for (const leaf of leaves) {
+      const r = await server.fetch(new Request(`http://t/${leaf!.appBase}`));
+      expect({ appBase: leaf!.appBase, status: r.status }).toEqual({
+        appBase: leaf!.appBase,
+        status: 200,
+      });
+    }
+    server.stop();
+  });
 });
