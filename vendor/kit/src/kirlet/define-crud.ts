@@ -18,7 +18,38 @@ export type CrudFieldSpec = {
   sortable?: boolean;
   normalize?: (value: unknown) => unknown;
   validate?: (value: unknown) => string | null;
+  /** Credencial o dato sensible: `field-values` no lo lista. */
+  secret?: boolean;
+  /**
+   * Permite `GET /<recurso>/field-values/<campo>` en un campo que por defecto
+   * se niega (json, secret, o nombre de credencial). Solo si sus valores
+   * distintos se pueden mostrar a cualquiera con lectura del recurso.
+   */
+  field_values?: boolean;
+  /**
+   * `false` = el campo no viaja en la lista (`GET /recurso`): fotos, firmas y
+   * adjuntos en base64. El detalle (`GET /recurso/:id`) lo sigue entregando.
+   */
+  list?: boolean;
 };
+
+/** Nombres de credencial: `password`, `api_key`, `token_hash`, `client_secret`… */
+const SENSITIVE_FIELD_RE =
+  /(^|_)(password|passwd|pwd|secret|secrets|token|tokens|api_?key|private_?key|credential|credentials|hash|pin)(_|$)/i;
+
+/** Blobs JSON que suelen llevar configuración con credenciales. */
+const JSON_BLOB_FIELDS = new Set(["config_json", "custom_data", "payload", "spec_json"]);
+
+/**
+ * `field-values` devuelve los valores distintos de una columna a quien tenga
+ * lectura del recurso. Un json o una credencial se niegan salvo que el campo
+ * lo permita con `field_values: true`.
+ */
+export function field_values_denied(field: string, spec: CrudFieldSpec | undefined): boolean {
+  if (spec?.field_values === true) return false;
+  if (spec?.secret === true || spec?.type === "json") return true;
+  return JSON_BLOB_FIELDS.has(field.toLowerCase()) || SENSITIVE_FIELD_RE.test(field);
+}
 
 export type CrudHooks = {
   before_create?: (ctx: KirletCtx, row: DomainRow) => Promise<DomainRow> | DomainRow;
@@ -323,7 +354,15 @@ export function define_crud(opts: DefineCrudOptions): KirletRouteTable {
         };
       }
       const total = await ctx.data.count(table, find_opts.where, find_opts.search);
-      return { data: rows, total_elementos: total, message: "Ruta encontrada" };
+      const omit = Object.entries(fields).filter(([, spec]) => spec.list === false).map(([name]) => name);
+      const data = omit.length
+        ? rows.map((row) => {
+            const copy = { ...row };
+            for (const name of omit) delete copy[name];
+            return copy;
+          })
+        : rows;
+      return { data, total_elementos: total, message: "Ruta encontrada" };
     },
 
     ...(imperium
@@ -350,6 +389,14 @@ export function define_crud(opts: DefineCrudOptions): KirletRouteTable {
             const columna_base = field === "id" || field === "created_at" || field === "updated_at" || field === soft_field;
             if (!columna_base && !fields[field]) {
               throw new KirletHttpError(400, "validation_error", `Campo desconocido: ${field}`, { field });
+            }
+            if (!columna_base && field_values_denied(field, fields[field])) {
+              throw new KirletHttpError(
+                400,
+                "validation_error",
+                `El campo ${field} no admite field-values`,
+                { field },
+              );
             }
             const termino = String(ctx.query.get("termino") ?? "");
             const values = await ctx.data.distinct(table, field, termino);
