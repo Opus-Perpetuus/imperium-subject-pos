@@ -205,7 +205,7 @@ export const pos_tickets_module = define_module({
           price_origin: { type: "string", search: true },
           withdrawal_amount: { type: "number" },
           withdrawal_reason: { type: "string", search: true },
-          // Firma manuscrita (data URL): field-values no debe listarla; el regex del kit no la cubre.
+          // Firma manuscrita (data URL): el kit ya la niega por nombre (signature, core 90aa24af3); secret explícito por si cambia el nombre.
           withdrawal_signature: { type: "string", search: true, secret: true },
           payment_method: { type: "string", search: true },
           payments: { type: "json" },
