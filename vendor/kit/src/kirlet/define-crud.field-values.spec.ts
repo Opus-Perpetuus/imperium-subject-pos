@@ -69,6 +69,25 @@ describe("field-values no lista credenciales ni blobs json", () => {
     expect(field_values_denied("tokenizer_model", { type: "string" })).toBe(false);
   });
 
+  test("camelCase y PII caen en la regla; field_values: true los abre", () => {
+    for (const field of ["clientSecret", "accessToken", "apiKey", "APIKey", "pinHash", "passwordHash", "secretKey", "smtp_pass"]) {
+      expect(field_values_denied(field, { type: "string" })).toBe(true);
+    }
+    for (const field of ["rfc", "proveedor_rfc", "emisorRfc", "curp", "nss", "clabe", "firma", "firma_digital", "img_signature_owner"]) {
+      expect(field_values_denied(field, { type: "string" })).toBe(true);
+    }
+    expect(field_values_denied("rfc", { type: "string", field_values: true })).toBe(false);
+    for (const field of ["firma", "firmas", "firma_digital", "firmaDigital", "signature", "withdrawalSignature", "delivery_signature", "img_signature_owner", "deliverySignatureAttachmentId"]) {
+      expect(field_values_denied(field, { type: "string" })).toBe(true);
+    }
+    expect(field_values_denied("foto", { type: "string", list: false })).toBe(true);
+    expect(field_values_denied("foto", { type: "string", list: false, field_values: true })).toBe(false);
+    expect(field_values_denied("foto", { type: "string" })).toBe(false);
+    for (const field of ["firmado_at", "rfcs_count_x", "nssa", "passport_no", "clientName", "pinned"]) {
+      expect(field_values_denied(field, { type: "string" })).toBe(false);
+    }
+  });
+
   test("HTTP: 400 validation_error sin filtrar el valor; el resto sigue igual", async () => {
     const server = create_kirlet_test_context(gateways(), { auth_disabled: true });
     const created = await server.fetch(

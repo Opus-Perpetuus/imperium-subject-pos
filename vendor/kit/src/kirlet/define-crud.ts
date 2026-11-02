@@ -33,22 +33,37 @@ export type CrudFieldSpec = {
   list?: boolean;
 };
 
-/** Nombres de credencial: `password`, `api_key`, `token_hash`, `client_secret`… */
+/**
+ * Nombres de credencial (`password`, `api_key`, `token_hash`, `client_secret`…)
+ * y PII que no se lista a cualquiera con lectura (`rfc`, `curp`, `nss`, `clabe`,
+ * firmas). Se evalúa sobre el nombre en snake_case: `clientSecret`,
+ * `accessToken`, `apiKey` y `pinHash` caen igual que su forma con guion bajo.
+ */
 const SENSITIVE_FIELD_RE =
-  /(^|_)(password|passwd|pwd|secret|secrets|token|tokens|api_?key|private_?key|credential|credentials|hash|pin)(_|$)/i;
+  /(^|_)(password|passwd|pwd|pass|secret|secrets|token|tokens|api_?key|private_?key|secret_?key|credential|credentials|hash|pin|rfc|curp|nss|clabe|firma|firmas|signature|signatures)(_|$)/i;
+
+/** `clientSecret` → `client_secret`; `APIKey` → `api_key`. */
+export function snake_field_name(field: string): string {
+  return field
+    .replace(/([A-Z]+)([A-Z][a-z0-9])/g, "$1_$2")
+    .replace(/([a-z0-9])([A-Z])/g, "$1_$2")
+    .toLowerCase();
+}
 
 /** Blobs JSON que suelen llevar configuración con credenciales. */
 const JSON_BLOB_FIELDS = new Set(["config_json", "custom_data", "payload", "spec_json"]);
 
 /**
  * `field-values` devuelve los valores distintos de una columna a quien tenga
- * lectura del recurso. Un json o una credencial se niegan salvo que el campo
+ * lectura del recurso. Un json, una credencial o PII se niegan salvo que el campo
  * lo permita con `field_values: true`.
  */
 export function field_values_denied(field: string, spec: CrudFieldSpec | undefined): boolean {
   if (spec?.field_values === true) return false;
-  if (spec?.secret === true || spec?.type === "json") return true;
-  return JSON_BLOB_FIELDS.has(field.toLowerCase()) || SENSITIVE_FIELD_RE.test(field);
+  // `list: false` marca fotos, firmas y adjuntos: tampoco salen por field-values.
+  if (spec?.secret === true || spec?.list === false || spec?.type === "json") return true;
+  const snake = snake_field_name(field);
+  return JSON_BLOB_FIELDS.has(snake) || SENSITIVE_FIELD_RE.test(snake);
 }
 
 export type CrudHooks = {
