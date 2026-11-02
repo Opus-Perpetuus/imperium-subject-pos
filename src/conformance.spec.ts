@@ -47,4 +47,28 @@ describe("subject-pos conformance", () => {
     }
     server.stop();
   });
+
+  // Core 7315462c9: field-values de un campo que la tabla no tiene es 400.
+  // El menú de cabecera de cada lista pide field-values por columna; ninguna
+  // columna declarada puede tumbar el servidor.
+  test("field-values de cada columna de leaf crud no responde 5xx", async () => {
+    const server = create_kirlet_test_context(SUBJECT);
+    const leaves = (SUBJECT.manifest().pages ?? [])
+      .map((p: { leaf?: { kind?: string; appBase?: string; listHeaders?: Record<string, unknown> } }) => p.leaf)
+      .filter((l) => l?.kind === "crud" && l.appBase);
+    expect(leaves.length).toBeGreaterThan(0);
+    for (const leaf of leaves) {
+      for (const column of Object.keys(leaf!.listHeaders ?? {})) {
+        const url = `http://t/${leaf!.appBase}/field-values/${column}`;
+        const r = await server.fetch(new Request(url));
+        expect({ url, server_error: r.status >= 500 }).toEqual({ url, server_error: false });
+      }
+      // Antes llegaba al SQL (500 en Postgres, 200 vacío en el contexto de prueba).
+      // 404 = ruta propia sin field-values; nunca 200 ni 5xx.
+      const url = `http://t/${leaf!.appBase}/field-values/__no_existe__`;
+      const r = await server.fetch(new Request(url));
+      expect({ url, rejected: r.status === 400 || r.status === 404 }).toEqual({ url, rejected: true });
+    }
+    server.stop();
+  });
 });
