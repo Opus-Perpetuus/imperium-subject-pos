@@ -1,0 +1,28 @@
+# Flujo ejecutable (esquema del plan «feature maps ejecutables»). La ficha .md se genera de este archivo.
+feature: pos-kits
+modulo: pos
+titulo: Vender un kit y descontar sus componentes
+rol: cajero
+datos: [caja y almacén de prueba fijos (seed ia.*), sesión de caja abierta de ia.cajero, producto kit con componentes
+    (seed)]
+inicio: /internal/pos
+pasos:
+- accion: clic
+  ancla: pos-live-catalog
+  ancla_pendiente: pos-catalogo-producto
+  respaldo: {rol: button, nombre: '{{producto.nombre}}'}
+  explica: Agrega el producto desde el catálogo
+- accion: tecla
+  ancla_pendiente: pos-cobrar
+  tecla: F5
+  explica: Abre el cobro (también Enter o «Cobrar ahora»)
+  espera: {visible: Forma de pago}
+- accion: clic
+  ancla_pendiente: pos-pago-finalizar
+  respaldo: {rol: button, nombre: Pagar}
+  backend: {api: POST /api/pos-tickets, status: 2xx}
+- accion: esperar
+  explica: La existencia de cada componente baja
+  backend: {api: 'POST /api/m/subject-pos/pos-tickets/{{ticket.id}}/sync-stock', status: 200}
+variantes: [teclado, movil-360, sin-conexion, sin-permiso]
+notas: ['Pantalla Angular del núcleo (frontend/src/app/components/pos): las anclas internas son del núcleo.']

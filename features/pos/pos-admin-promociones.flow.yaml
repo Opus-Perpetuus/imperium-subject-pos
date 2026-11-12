@@ -1,0 +1,40 @@
+# Flujo ejecutable (esquema del plan «feature maps ejecutables»). La ficha .md se genera de este archivo.
+feature: pos-admin-promociones
+modulo: pos
+titulo: Dar de alta una promoción 2x1
+rol: gerencia
+datos: [producto de prueba]
+inicio: /internal/pos-promotion
+pasos:
+- accion: clic
+  ancla_pendiente: view-list-new
+  respaldo: {rol: button, nombre: Nuevo}
+- accion: escribir
+  ancla: field-name
+  respaldo: {rol: textbox, nombre: Nombre}
+  texto: 2x1 IA
+- accion: escribir
+  ancla: field-kind
+  respaldo: {rol: textbox, nombre: 'Tipo (nxm, mayoreo, descuento)'}
+  texto: nxm
+- accion: escribir
+  ancla: field-product_id
+  respaldo: {rol: textbox, nombre: Producto}
+  texto: '{{producto.id}}'
+- accion: escribir
+  ancla: field-buy_qty
+  respaldo: {rol: spinbutton, nombre: Lleva (NxM)}
+  texto: '2'
+- accion: escribir
+  ancla: field-pay_qty
+  respaldo: {rol: spinbutton, nombre: Paga (NxM)}
+  texto: '1'
+- accion: clic
+  ancla: field-is_active
+  respaldo: {rol: checkbox, nombre: Activa}
+- accion: tecla
+  tecla: Control+s
+  backend: {api: POST /api/m/subject-pos/pos-promotion, status: 2xx}
+  captura: promocion
+variantes: [teclado, movil-360, sin-conexion, sin-permiso]
+notas: [Botón «Nuevo» y acciones de cabecera sin ancla en el lanzador (núcleo).]

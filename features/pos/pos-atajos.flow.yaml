@@ -1,0 +1,15 @@
+# Flujo ejecutable (esquema del plan «feature maps ejecutables»). La ficha .md se genera de este archivo.
+feature: pos-atajos
+modulo: pos
+titulo: Atajos de teclado
+rol: cajero
+datos: [caja y almacén de prueba fijos (seed ia.*), sesión de caja abierta de ia.cajero]
+inicio: /internal/pos
+pasos:
+- accion: tecla
+  tecla: F2
+  espera: {visible: Atajos de teclado}
+- {accion: esperar, ancla: pos-atajos, captura: atajos}
+- {accion: tecla, tecla: Escape}
+variantes: [teclado, movil-360]
+notas: ['Pantalla Angular del núcleo (frontend/src/app/components/pos): las anclas internas son del núcleo.']

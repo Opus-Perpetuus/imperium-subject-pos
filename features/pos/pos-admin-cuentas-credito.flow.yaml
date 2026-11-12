@@ -1,0 +1,32 @@
+# Flujo ejecutable (esquema del plan «feature maps ejecutables»). La ficha .md se genera de este archivo.
+feature: pos-admin-cuentas-credito
+modulo: pos
+titulo: Cuenta de crédito de un cliente
+rol: gerencia
+datos: [cliente de prueba]
+inicio: /internal/pos-credit
+pasos:
+- accion: clic
+  ancla_pendiente: view-list-new
+  respaldo: {rol: button, nombre: Nuevo}
+- accion: escribir
+  ancla: field-name
+  respaldo: {rol: textbox, nombre: Nombre}
+  texto: Crédito IA
+- accion: escribir
+  ancla: field-client_id
+  respaldo: {rol: textbox, nombre: Cliente}
+  texto: '{{cliente.id}}'
+- accion: escribir
+  ancla: field-credit_limit
+  respaldo: {rol: textbox, nombre: Límite de crédito}
+  texto: '5000'
+- accion: tecla
+  tecla: Control+s
+  backend: {api: POST /api/m/subject-pos/pos-credit-account, status: 2xx}
+  captura: cuenta
+- accion: esperar
+  explica: 'El abono no tiene botón en esta pantalla: se registra por API'
+  backend: {api: 'POST /api/m/subject-pos/pos-credit-account/{{cuenta.id}}/abono', status: 2xx}
+variantes: [teclado, movil-360, sin-conexion, sin-permiso]
+notas: [Botón «Nuevo» y acciones de cabecera sin ancla en el lanzador (núcleo).]

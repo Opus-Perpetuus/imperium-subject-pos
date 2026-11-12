@@ -1,0 +1,25 @@
+# Flujo ejecutable (esquema del plan «feature maps ejecutables»). La ficha .md se genera de este archivo.
+feature: pos-abrir-sesion
+modulo: pos
+titulo: Abrir sesión de caja
+rol: cajero
+datos: [caja y almacén de prueba fijos (seed ia.*), 'seed:productos-pos (≥1 producto con existencia)']
+inicio: /internal/pos
+pasos:
+- accion: esperar
+  espera: {visible: Sesión de caja}
+  backend: {api: GET /api/pos-session, status: 200}
+  captura: gate
+- accion: clic
+  ancla_pendiente: pos-sesion-crear
+  respaldo: {rol: button, nombre: Crear y abrir sesión}
+  backend: {api: POST /api/pos-session, status: 2xx}
+- accion: esperar
+  explica: El PIN llega una sola vez
+  espera: {visible: Guarda este PIN}
+- accion: clic
+  ancla_pendiente: pos-sesion-pin-entendido
+  respaldo: {rol: button, nombre: Entendido}
+  captura: sesion
+variantes: [teclado, movil-360, sin-conexion, sin-permiso]
+notas: ['Pantalla Angular del núcleo (frontend/src/app/components/pos): las anclas internas son del núcleo.']

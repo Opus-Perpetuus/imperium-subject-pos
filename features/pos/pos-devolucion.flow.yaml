@@ -1,0 +1,34 @@
+# Flujo ejecutable (esquema del plan «feature maps ejecutables»). La ficha .md se genera de este archivo.
+feature: pos-devolucion
+modulo: pos
+titulo: Devolución de una venta
+rol: cajero
+datos: [caja y almacén de prueba fijos (seed ia.*), sesión de caja abierta de ia.cajero, venta cerrada (folio)]
+inicio: /internal/pos
+pasos:
+- accion: tecla
+  tecla: F9
+  explica: Abre «Devolución de una venta»
+  espera: {visible: Devolución de una venta}
+- accion: escribir
+  ancla: pos-devolucion
+  respaldo: {rol: textbox, nombre: Folio}
+  texto: '{{venta.folio}}'
+- accion: tecla
+  tecla: Enter
+  espera: {fila: '{{venta.folio}}'}
+  backend: {api: 'GET /api/pos-tickets/devolucion-disponible?folio={{venta.folio}}', status: 200}
+- accion: clic
+  ancla_pendiente: pos-devolucion-todo
+  respaldo: {rol: button, nombre: Devolver todo}
+- accion: clic
+  ancla_pendiente: pos-devolucion-inventario
+  respaldo: {rol: checkbox, nombre: Regresar al inventario}
+- accion: clic
+  ancla_pendiente: pos-devolucion-confirmar
+  respaldo: {rol: button, nombre: Registrar}
+  backend: {api: POST /api/pos-tickets, status: 2xx}
+  captura: devolucion
+variantes: [teclado, movil-360, sin-conexion, sin-permiso]
+notas: ['Pantalla Angular del núcleo (frontend/src/app/components/pos): las anclas internas son del núcleo.', Con
+    lotes (FEFO) la devolución debe conservar el lote de la venta (Fase 1 del plan).]

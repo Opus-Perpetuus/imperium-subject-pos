@@ -1,0 +1,45 @@
+# Flujo ejecutable (esquema del plan «feature maps ejecutables»). La ficha .md se genera de este archivo.
+feature: pos-apartados
+modulo: pos
+titulo: Apartar con anticipo y abonar
+rol: cajero
+datos: [caja y almacén de prueba fijos (seed ia.*), sesión de caja abierta de ia.cajero, 'seed:productos-pos (≥1
+    producto con existencia)', cliente de prueba]
+inicio: /internal/pos
+pasos:
+- accion: clic
+  ancla: pos-live-catalog
+  ancla_pendiente: pos-catalogo-producto
+  respaldo: {rol: button, nombre: '{{producto.nombre}}'}
+  explica: Agrega el producto desde el catálogo
+- accion: tecla
+  ancla_pendiente: pos-cobrar
+  tecla: F5
+  explica: Abre el cobro (también Enter o «Cobrar ahora»)
+  espera: {visible: Forma de pago}
+- accion: clic
+  ancla: pos-formas-de-pago
+  respaldo: {rol: radio, nombre: Apartado}
+- accion: escribir
+  ancla: pos-apartados
+  respaldo: {rol: textbox, nombre: Anticipo}
+  texto: '100'
+- accion: clic
+  ancla_pendiente: pos-pago-finalizar
+  respaldo: {rol: button, nombre: Pagar}
+  backend: {api: POST /api/pos-tickets, status: 2xx}
+  captura: apartado
+- accion: tecla
+  tecla: F4
+  espera: {visible: Abono a apartado}
+- accion: clic
+  ancla_pendiente: pos-apartado-abono
+  respaldo: {rol: button, nombre: Abono a apartado}
+- accion: escribir
+  ancla_pendiente: pos-apartado-folio
+  respaldo: {rol: textbox, nombre: Folio}
+  texto: '{{apartado.folio}}'
+  backend: {api: 'GET /api/pos-tickets/apartado?folio={{apartado.folio}}', status: 200}
+variantes: [teclado, movil-360, sin-conexion, sin-permiso]
+notas: ['Pantalla Angular del núcleo (frontend/src/app/components/pos): las anclas internas son del núcleo.', Trasladar
+    piezas apartadas entre almacenes es Fase 1; lo cubre el flujo de inventario (Kyosteno).]

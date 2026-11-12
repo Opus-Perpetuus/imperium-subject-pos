@@ -1,0 +1,27 @@
+# Flujo ejecutable (esquema del plan «feature maps ejecutables»). La ficha .md se genera de este archivo.
+feature: pos-arqueo-cierre
+modulo: pos
+titulo: Arqueo y cierre de caja
+rol: cajero
+datos: [caja y almacén de prueba fijos (seed ia.*), sesión de caja abierta de ia.cajero, al menos 1 venta]
+inicio: /internal/pos
+pasos:
+- accion: clic
+  ancla_pendiente: pos-menu-caja
+  respaldo: {rol: button, nombre: Menú de la caja}
+- accion: clic
+  ancla_pendiente: pos-cierre-caja
+  respaldo: {rol: menuitem, nombre: Cierre de caja}
+  espera: {visible: Concluir cierre}
+- accion: escribir
+  ancla: pos-arqueo
+  respaldo: {rol: spinbutton, nombre: '{{denominacion}}'}
+  texto: '1'
+  explica: Cuenta billetes y monedas
+  captura: arqueo
+- accion: clic
+  ancla_pendiente: pos-cierre-concluir
+  respaldo: {rol: button, nombre: Concluir cierre}
+  backend: {api: 'PATCH /api/pos-session/{{sesion.id}}', status: 2xx}
+variantes: [teclado, movil-360, sin-conexion, sin-permiso]
+notas: ['Pantalla Angular del núcleo (frontend/src/app/components/pos): las anclas internas son del núcleo.']
