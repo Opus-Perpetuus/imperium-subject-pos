@@ -3,17 +3,15 @@ feature: pos-cotizaciones
 modulo: pos
 titulo: Cotizar y luego vender la cotización
 rol: cajero
-datos: [caja y almacén de prueba fijos (seed ia.*), sesión de caja abierta de ia.cajero, 'seed:productos-pos (≥1
-    producto con existencia)']
+datos: ['seed:caja-prueba', 'seed:productos-pos']
 inicio: /internal/pos
 pasos:
 - accion: clic
-  ancla: pos-live-catalog
-  ancla_pendiente: pos-catalogo-producto
+  ancla: pos-catalogo-producto
   respaldo: {rol: button, nombre: '{{producto.nombre}}'}
   explica: Agrega el producto desde el catálogo
 - accion: tecla
-  ancla_pendiente: pos-cobrar
+  ancla: pos-cobrar
   tecla: F5
   explica: Abre el cobro (también Enter o «Cobrar ahora»)
   espera: {visible: Forma de pago}
@@ -31,7 +29,7 @@ pasos:
   ancla: pos-cotizaciones
   respaldo: {rol: button, nombre: Cargar cotización}
 - accion: escribir
-  ancla_pendiente: pos-cotizacion-folio
+  ancla: pos-cotizacion-folio
   respaldo: {rol: textbox, nombre: Folio}
   texto: '{{cotizacion.folio}}'
   backend: {api: 'GET /api/pos-tickets/cotizacion?folio={{cotizacion.folio}}', status: 200}

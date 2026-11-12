@@ -3,17 +3,15 @@ feature: pos-credito-clientes
 modulo: pos
 titulo: Venta a crédito y abono del cliente
 rol: cajero
-datos: [caja y almacén de prueba fijos (seed ia.*), sesión de caja abierta de ia.cajero, 'seed:productos-pos (≥1
-    producto con existencia)', cliente con credito_limite]
+datos: ['seed:caja-prueba', 'seed:productos-pos', 'seed:cliente-credito']
 inicio: /internal/pos
 pasos:
 - accion: clic
-  ancla: pos-live-catalog
-  ancla_pendiente: pos-catalogo-producto
+  ancla: pos-catalogo-producto
   respaldo: {rol: button, nombre: '{{producto.nombre}}'}
   explica: Agrega el producto desde el catálogo
 - accion: tecla
-  ancla_pendiente: pos-cobrar
+  ancla: pos-cobrar
   tecla: F5
   explica: Abre el cobro (también Enter o «Cobrar ahora»)
   espera: {visible: Forma de pago}
@@ -21,7 +19,7 @@ pasos:
   ancla: pos-formas-de-pago
   respaldo: {rol: radio, nombre: Crédito}
 - accion: clic
-  ancla_pendiente: pos-pago-finalizar
+  ancla: pos-pago-finalizar
   respaldo: {rol: button, nombre: Pagar}
   backend:
     api: POST /api/pos-tickets
@@ -32,11 +30,11 @@ pasos:
   ancla: pos-credito-clientes
   respaldo: {rol: button, nombre: Abono de cliente a crédito}
 - accion: escribir
-  ancla_pendiente: pos-credito-abono-importe
+  ancla: pos-credito-abono-importe
   respaldo: {rol: textbox, nombre: Importe}
   texto: '50'
 - accion: clic
-  ancla_pendiente: pos-credito-abono-confirmar
+  ancla: pos-credito-abono-confirmar
   respaldo: {rol: button, nombre: Registrar}
   backend: {api: 'GET /api/pos-tickets/estado-cuenta?cliente={{cliente.id}}', status: 200}
   captura: abono

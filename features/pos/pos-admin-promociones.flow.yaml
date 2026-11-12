@@ -3,11 +3,11 @@ feature: pos-admin-promociones
 modulo: pos
 titulo: Dar de alta una promoción 2x1
 rol: gerencia
-datos: [producto de prueba]
+datos: ['seed:productos-pos']
 inicio: /internal/pos-promotion
 pasos:
 - accion: clic
-  ancla_pendiente: view-list-new
+  ancla: view-list-new
   respaldo: {rol: button, nombre: Nuevo}
 - accion: escribir
   ancla: field-name
@@ -37,4 +37,4 @@ pasos:
   backend: {api: POST /api/m/subject-pos/pos-promotion, status: 2xx}
   captura: promocion
 variantes: [teclado, movil-360, sin-conexion, sin-permiso]
-notas: [Botón «Nuevo» y acciones de cabecera sin ancla en el lanzador (núcleo).]
+notas: ['El botón «Nuevo» ya pinta view-list-new (Fase 0 del núcleo).']

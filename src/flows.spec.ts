@@ -20,17 +20,25 @@ const ROLES = new Set([
   "logistica", "chofer", "compras", "consulta", "sinpermiso", "anonimo",
 ]);
 const ACCIONES = new Set([
-  "clic", "doble-clic", "escribir", "tecla", "escanear", "sin-conexion", "esperar",
+  "clic", "doble-clic", "escribir", "tecla", "escanear", "sin-conexion", "con-conexion", "esperar",
 ]);
 const VARIANTES = new Set(["teclado", "movil-360", "sin-conexion", "sin-permiso"]);
 
 /** Anclas que pinta el lanzador del núcleo (no viven en este repo). */
 const CORE_ANCHORS = new Set<string>([
-  "view-list-row", "main-menu-toggle", "header-manual-button", "header-logout",
-  // Caja Angular del núcleo (frontend/src/app/components/pos).
-  "pos-apartados", "pos-arqueo", "pos-atajos", "pos-cotizaciones", "pos-credito-clientes",
-  "pos-devolucion", "pos-entrada-efectivo", "pos-formas-de-pago", "pos-live-catalog",
-  "pos-reimpresion", "pos-ventas-en-espera",
+  "view-list-row", "view-list-new", "main-menu-toggle", "header-manual-button", "header-logout",
+  // Caja Angular del núcleo (frontend/src/app/components/pos), Fase 0.
+  "pos-apartado-abono", "pos-apartado-folio", "pos-apartados", "pos-arqueo", "pos-atajos",
+  "pos-catalogo-producto", "pos-cierre-caja", "pos-cierre-concluir", "pos-cobrar",
+  "pos-cotizacion-folio", "pos-cotizaciones", "pos-credito-abono-confirmar",
+  "pos-credito-abono-importe", "pos-credito-clientes", "pos-devolucion",
+  "pos-devolucion-confirmar", "pos-devolucion-inventario", "pos-devolucion-saldo-favor",
+  "pos-devolucion-todo", "pos-entrada-efectivo", "pos-entrada-efectivo-confirmar",
+  "pos-escaner", "pos-formas-de-pago", "pos-linea-cantidad", "pos-live-catalog",
+  "pos-menu-caja", "pos-modo-trabajo", "pos-pago-efectivo", "pos-pago-finalizar",
+  "pos-pago-referencia", "pos-reimpresion", "pos-reimpresion-folio",
+  "pos-reimpresion-remision", "pos-sesion-crear", "pos-sesion-usar",
+  "pos-ventas-en-espera",
 ]);
 
 type Paso = {

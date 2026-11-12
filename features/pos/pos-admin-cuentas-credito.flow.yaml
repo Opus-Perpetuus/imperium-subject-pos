@@ -3,11 +3,11 @@ feature: pos-admin-cuentas-credito
 modulo: pos
 titulo: Cuenta de crédito de un cliente
 rol: gerencia
-datos: [cliente de prueba]
+datos: ['seed:cliente-credito']
 inicio: /internal/pos-credit
 pasos:
 - accion: clic
-  ancla_pendiente: view-list-new
+  ancla: view-list-new
   respaldo: {rol: button, nombre: Nuevo}
 - accion: escribir
   ancla: field-name
@@ -29,4 +29,4 @@ pasos:
   explica: 'El abono no tiene botón en esta pantalla: se registra por API'
   backend: {api: 'POST /api/m/subject-pos/pos-credit-account/{{cuenta.id}}/abono', status: 2xx}
 variantes: [teclado, movil-360, sin-conexion, sin-permiso]
-notas: [Botón «Nuevo» y acciones de cabecera sin ancla en el lanzador (núcleo).]
+notas: ['El botón «Nuevo» ya pinta view-list-new (Fase 0 del núcleo).']

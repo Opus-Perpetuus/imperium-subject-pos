@@ -3,7 +3,7 @@ feature: pos-admin-sesiones
 modulo: pos
 titulo: Consultar sesiones de caja
 rol: consulta
-datos: [sesión de caja abierta de ia.cajero]
+datos: ['seed:caja-prueba']
 inicio: /internal/pos-session
 pasos:
 - accion: clic

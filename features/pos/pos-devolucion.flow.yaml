@@ -3,7 +3,7 @@ feature: pos-devolucion
 modulo: pos
 titulo: Devolución de una venta
 rol: cajero
-datos: [caja y almacén de prueba fijos (seed ia.*), sesión de caja abierta de ia.cajero, venta cerrada (folio)]
+datos: ['seed:caja-prueba', 'venta cerrada (folio)']
 inicio: /internal/pos
 pasos:
 - accion: tecla
@@ -19,13 +19,13 @@ pasos:
   espera: {fila: '{{venta.folio}}'}
   backend: {api: 'GET /api/pos-tickets/devolucion-disponible?folio={{venta.folio}}', status: 200}
 - accion: clic
-  ancla_pendiente: pos-devolucion-todo
+  ancla: pos-devolucion-todo
   respaldo: {rol: button, nombre: Devolver todo}
 - accion: clic
-  ancla_pendiente: pos-devolucion-inventario
+  ancla: pos-devolucion-inventario
   respaldo: {rol: checkbox, nombre: Regresar al inventario}
 - accion: clic
-  ancla_pendiente: pos-devolucion-confirmar
+  ancla: pos-devolucion-confirmar
   respaldo: {rol: button, nombre: Registrar}
   backend: {api: POST /api/pos-tickets, status: 2xx}
   captura: devolucion
