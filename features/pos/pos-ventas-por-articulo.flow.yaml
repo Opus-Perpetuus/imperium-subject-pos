@@ -1,0 +1,13 @@
+# Flujo ejecutable (esquema del plan «feature maps ejecutables»). La ficha .md se genera de este archivo.
+feature: pos-ventas-por-articulo
+modulo: pos
+titulo: Reporte de ventas por artículo
+rol: gerencia
+datos: [ventas del mes]
+inicio: /internal/reportes-comerciales
+pasos:
+- accion: esperar
+  backend: {api: GET /api/pos-tickets/ventas-por-articulo, status: 200}
+  captura: reporte
+variantes: [teclado, movil-360, sin-conexion, sin-permiso]
+notas: [La pantalla es Reportes comerciales del núcleo.]

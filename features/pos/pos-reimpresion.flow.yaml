@@ -1,0 +1,27 @@
+# Flujo ejecutable (esquema del plan «feature maps ejecutables»). La ficha .md se genera de este archivo.
+feature: pos-reimpresion
+modulo: pos
+titulo: Reimprimir ticket o remisión por folio
+rol: cajero
+datos: [caja y almacén de prueba fijos (seed ia.*), sesión de caja abierta de ia.cajero, venta cerrada (folio)]
+inicio: /internal/pos
+pasos:
+- accion: tecla
+  tecla: F8
+  espera: {visible: Ventas en espera}
+- accion: clic
+  ancla: pos-reimpresion
+  respaldo: {rol: button, nombre: Reimprimir por folio}
+- accion: escribir
+  ancla_pendiente: pos-reimpresion-folio
+  respaldo: {rol: textbox, nombre: Folio}
+  texto: '{{venta.folio}}'
+  backend: {api: 'GET /api/pos-tickets/por-folio?folio={{venta.folio}}', status: 200}
+- accion: clic
+  ancla_pendiente: pos-reimpresion-remision
+  respaldo: {rol: button, nombre: Remisión}
+  espera: {visible: '*** COPIA ***'}
+  backend: {api: POST /api/pos-tickets/reimpresion, status: 2xx}
+  captura: copia
+variantes: [teclado, movil-360, sin-conexion, sin-permiso]
+notas: ['Pantalla Angular del núcleo (frontend/src/app/components/pos): las anclas internas son del núcleo.']

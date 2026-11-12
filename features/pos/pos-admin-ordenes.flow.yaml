@@ -1,0 +1,14 @@
+# Flujo ejecutable (esquema del plan «feature maps ejecutables»). La ficha .md se genera de este archivo.
+feature: pos-admin-ordenes
+modulo: pos
+titulo: Consultar órdenes POS
+rol: consulta
+datos: []
+inicio: /internal/pos-order
+pasos:
+- accion: esperar
+  ancla: view-list-row
+  backend: {api: GET /api/m/subject-pos/pos-order, status: 200}
+  captura: ordenes
+variantes: [teclado, movil-360, sin-conexion, sin-permiso]
+notas: ['Pantalla Angular del núcleo (frontend/src/app/components/pos): las anclas internas son del núcleo.']

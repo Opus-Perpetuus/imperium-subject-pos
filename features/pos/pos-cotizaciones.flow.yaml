@@ -1,0 +1,39 @@
+# Flujo ejecutable (esquema del plan «feature maps ejecutables»). La ficha .md se genera de este archivo.
+feature: pos-cotizaciones
+modulo: pos
+titulo: Cotizar y luego vender la cotización
+rol: cajero
+datos: [caja y almacén de prueba fijos (seed ia.*), sesión de caja abierta de ia.cajero, 'seed:productos-pos (≥1
+    producto con existencia)']
+inicio: /internal/pos
+pasos:
+- accion: clic
+  ancla: pos-live-catalog
+  ancla_pendiente: pos-catalogo-producto
+  respaldo: {rol: button, nombre: '{{producto.nombre}}'}
+  explica: Agrega el producto desde el catálogo
+- accion: tecla
+  ancla_pendiente: pos-cobrar
+  tecla: F5
+  explica: Abre el cobro (también Enter o «Cobrar ahora»)
+  espera: {visible: Forma de pago}
+- accion: clic
+  ancla: pos-formas-de-pago
+  respaldo: {rol: radio, nombre: Cotización (no cobra)}
+- accion: clic
+  ancla_pendiente: pos-cotizacion-guardar
+  respaldo: {rol: button, nombre: Guardar}
+  captura: cotizacion
+- accion: tecla
+  tecla: F8
+  espera: {visible: Ventas en espera}
+- accion: clic
+  ancla: pos-cotizaciones
+  respaldo: {rol: button, nombre: Cargar cotización}
+- accion: escribir
+  ancla_pendiente: pos-cotizacion-folio
+  respaldo: {rol: textbox, nombre: Folio}
+  texto: '{{cotizacion.folio}}'
+  backend: {api: 'GET /api/pos-tickets/cotizacion?folio={{cotizacion.folio}}', status: 200}
+variantes: [teclado, movil-360, sin-conexion, sin-permiso]
+notas: ['Pantalla Angular del núcleo (frontend/src/app/components/pos): las anclas internas son del núcleo.']

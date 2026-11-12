@@ -1,0 +1,22 @@
+# Flujo ejecutable (esquema del plan «feature maps ejecutables»). La ficha .md se genera de este archivo.
+feature: pos-entrada-efectivo
+modulo: pos
+titulo: Entrada de efectivo a la caja
+rol: cajero
+datos: [caja y almacén de prueba fijos (seed ia.*), sesión de caja abierta de ia.cajero]
+inicio: /internal/pos
+pasos:
+- accion: tecla
+  tecla: F4
+  espera: {visible: Entrada de efectivo}
+- accion: escribir
+  ancla: pos-entrada-efectivo
+  respaldo: {rol: textbox, nombre: Importe}
+  texto: '500'
+- accion: clic
+  ancla_pendiente: pos-entrada-efectivo-confirmar
+  respaldo: {rol: button, nombre: Registrar}
+  backend: {api: POST /api/pos-tickets, status: 2xx}
+  captura: entrada
+variantes: [teclado, movil-360, sin-conexion, sin-permiso]
+notas: ['Pantalla Angular del núcleo (frontend/src/app/components/pos): las anclas internas son del núcleo.']
