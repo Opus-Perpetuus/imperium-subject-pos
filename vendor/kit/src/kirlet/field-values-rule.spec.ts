@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { field_name_denied } from "./field-values-rule.js";
+import { field_name_access, field_name_denied } from "./field-values-rule.js";
 import { field_values_denied } from "./define-crud.js";
 
 describe("field_name_denied: credenciales, PII y blobs; no metadatos", () => {
@@ -14,7 +14,7 @@ describe("field_name_denied: credenciales, PII y blobs; no metadatos", () => {
     for (const f of [
       "pin_type", "pin_length", "pin_version", "token_type", "reset_password_kind", "reset_password_expires",
       "html_element_hash", "foto_hash", "hash", "event_type", "whatsapp_activo", "whatsapp_plantilla",
-      "tokenizer_model", "firmado_at", "pinned", "passenger_no", "nssa", "clientName", "estado", "banco",
+      "tokenizer_model", "firmado_at", "pinned", "passenger_no", "nssa", "client_id", "estado", "banco",
       "ubicacion_destino", "ubicacion_codigo", "ubicacion_id", "ubicacion_preferida", "cuenta_contable", "direccionamiento",
       "clave", "clave_unidad", "clave_prod_serv", "codigo", "codigo_barras", "num_empleado", "numero_economico",
       "num_intentos", "hotel", "celda", "linea", "home_page",
@@ -75,6 +75,21 @@ describe("field_name_denied: credenciales, PII y blobs; no metadatos", () => {
     }
   });
 
+  test("fase 4: domicilio en inglés, número ext/int suelto, liga a mapas y delegación libre", () => {
+    for (const f of [
+      "street", "citizen_street", "street_address", "neighborhood", "neighbourhood",
+      "exterior_number", "interior_number", "building_number_external", "building_number_internal",
+      "ext_no", "int_no", "exterior", "interior", "pedido_contacto_url_maps", "urlMaps", "maps_url", "boroughs",
+    ]) expect([f, field_name_denied(f)]).toEqual([f, true]);
+    // Delegación con ref al catálogo: el valor es el id.
+    expect(field_name_denied("borough", { is_reference: true })).toBe(false);
+    expect(field_name_denied("borough")).toBe(true);
+    // Sin falsos positivos: exploración clínica, parámetros y nombres de mapa de ruta.
+    for (const f of ["habitus_exterior", "neighbor_params", "streetwise", "mapa", "delivery_route_mapa", "interiorismo"]) {
+      expect([f, field_name_denied(f)]).toEqual([f, false]);
+    }
+  });
+
   test("fase 3b: plantilla con credencial, cuenta bancaria compuesta, zip/home y booleanos", () => {
     for (const f of [
       "password_template", "token_plantilla", "pin_template", "secret_templates", "contrasena_plantilla",
@@ -91,5 +106,68 @@ describe("field_name_denied: credenciales, PII y blobs; no metadatos", () => {
     }
     // Pero un blob json no se abre por ser booleano.
     expect(field_name_denied("payload", { is_boolean: true })).toBe(true);
+  });
+});
+
+describe("field_name_access: fase 5 y clases (denied / session / open)", () => {
+  test("credenciales, firmas y blobs: denied (ni con sesión)", () => {
+    for (const f of ["password", "api_key", "token_value", "pin_hash", "firma", "firma_digital", "img_signature_owner", "config_json", "cvv"]) {
+      expect([f, field_name_access(f)]).toEqual([f, "denied"]);
+    }
+  });
+  test("PII: session (contacto, domicilio, fiscales, nombres, clínicos, ciudad, placas)", () => {
+    for (const f of [
+      "email", "telefono", "rfc", "curp", "clabe", "cuenta", "salario_diario", "fecha_nacimiento", "street", "boroughs",
+      "contacto_nombre", "nombre_paciente", "alertante_nombre", "firmante", "apellido_paterno", "nombre_completo", "clientName",
+      "alergias", "enfermedad", "impresion_diagnostica", "diagnostico", "edad", "sexo", "genero", "estado_civil", "blood_type", "tipo_sangre",
+      "localidad", "ciudad", "city", "placa", "placas", "plates", "license_plate",
+    ]) {
+      expect([f, field_name_access(f)]).toEqual([f, "session"]);
+    }
+  });
+  test("nombre suelto: session solo en recursos de personas", () => {
+    for (const r of ["patient", "employee", "alumnos", "citizen", "payroll-receipt", "herr-telefono/contactos", "contactos", "directorio-contactos", "user", "voluntariado"]) {
+      expect([r, field_name_access("nombre", { resource: r })]).toEqual([r, "session"]);
+      expect([r, field_name_access("name", { resource: r })]).toEqual([r, "session"]);
+    }
+    for (const r of ["productos", "catalog", "almacen-articulos", "vehiculos", "rutas", "usuarios_grupo_x".replace("usuarios_", "grupos_")]) {
+      expect([r, field_name_access("nombre", { resource: r })]).toEqual([r, "open"]);
+    }
+    expect(field_name_access("nombre")).toBe("open");
+  });
+  test("fase 5b: catálogos municipales con nombre y city_zone_id abiertos", () => {
+    for (const r of ["citizen-report-reporting-medium", "citizen-report-problem", "violation-user-id-type", "user-group"]) {
+      expect([r, field_name_access("name", { resource: r })]).toEqual([r, "open"]);
+    }
+    expect(field_name_access("city_zone_id")).toBe("open");
+    expect(field_name_access("city_zone")).toBe("session");
+  });
+  test("fase 5b: choferes, apellidos, CFDI y clínicos en contexto", () => {
+    for (const f of [
+      "chofer", "conductor", "solicitante", "partner_lastname", "client_lastname", "lastname",
+      "receptor_nombre", "emisor_nombre", "nombre_fiscal", "tratamiento_farmacologico",
+    ]) {
+      expect([f, field_name_access(f)]).toEqual([f, "session"]);
+    }
+    for (const r of ["medical-file", "kiosk", "patient", "medical"]) {
+      for (const f of ["peso", "talla", "habitus_exterior", "imc", "signos_vitales"]) {
+        expect([r, f, field_name_access(f, { resource: r })]).toEqual([r, f, "session"]);
+      }
+    }
+    // Fuera del hospital `peso`/`talla` son del artículo; `chofer_id` con ref es la FK.
+    for (const [f, r] of [["peso", "articulo"], ["peso_kg", "envio"], ["talla", "producto"], ["pesos", "venta"], ["regimen_fiscal", "factura"]]) {
+      expect([f, r, field_name_access(f!, { resource: r })]).toEqual([f, r, "open"]);
+    }
+    expect(field_name_access("chofer_id", { is_reference: true })).toBe("open");
+  });
+  test("ciudad/localidad con ref al catálogo pasa; sin falsos positivos", () => {
+    expect(field_name_access("localidad_id", { is_reference: true })).toBe("open");
+    expect(field_name_access("ciudad", { is_reference: true })).toBe("open");
+    for (const f of [
+      "estado", "page_size", "template", "whatsapp_plantilla", "storage", "usage", "nombre_producto", "name", "producto_nombre",
+      "plantilla", "sexto", "edades_rango_type", "municipio", "categoria", "placement", "imagen", "marca", "modelo",
+    ]) {
+      expect([f, field_name_access(f)]).toEqual([f, "open"]);
+    }
   });
 });
