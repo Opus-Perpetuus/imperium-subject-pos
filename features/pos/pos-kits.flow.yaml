@@ -3,22 +3,20 @@ feature: pos-kits
 modulo: pos
 titulo: Vender un kit y descontar sus componentes
 rol: cajero
-datos: [caja y almacén de prueba fijos (seed ia.*), sesión de caja abierta de ia.cajero, producto kit con componentes
-    (seed)]
+datos: ['seed:caja-prueba', 'seed:productos-pos']
 inicio: /internal/pos
 pasos:
 - accion: clic
-  ancla: pos-live-catalog
-  ancla_pendiente: pos-catalogo-producto
+  ancla: pos-catalogo-producto
   respaldo: {rol: button, nombre: '{{producto.nombre}}'}
   explica: Agrega el producto desde el catálogo
 - accion: tecla
-  ancla_pendiente: pos-cobrar
+  ancla: pos-cobrar
   tecla: F5
   explica: Abre el cobro (también Enter o «Cobrar ahora»)
   espera: {visible: Forma de pago}
 - accion: clic
-  ancla_pendiente: pos-pago-finalizar
+  ancla: pos-pago-finalizar
   respaldo: {rol: button, nombre: Pagar}
   backend: {api: POST /api/pos-tickets, status: 2xx}
 - accion: esperar

@@ -3,17 +3,15 @@ feature: pos-promociones-mayoreo
 modulo: pos
 titulo: Precio de mayoreo y promoción al subir la cantidad
 rol: cajero
-datos: [caja y almacén de prueba fijos (seed ia.*), sesión de caja abierta de ia.cajero, producto con escala de
-    mayoreo y promoción activa]
+datos: ['seed:caja-prueba', 'seed:productos-pos', 'promoción activa']
 inicio: /internal/pos
 pasos:
 - accion: clic
-  ancla: pos-live-catalog
-  ancla_pendiente: pos-catalogo-producto
+  ancla: pos-catalogo-producto
   respaldo: {rol: button, nombre: '{{producto.nombre}}'}
   explica: Agrega el producto desde el catálogo
 - accion: escribir
-  ancla_pendiente: pos-linea-cantidad
+  ancla: pos-linea-cantidad
   respaldo: {rol: spinbutton, nombre: Cantidad}
   texto: '12'
 - accion: esperar

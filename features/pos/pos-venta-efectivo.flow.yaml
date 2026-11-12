@@ -3,27 +3,25 @@ feature: pos-venta-efectivo
 modulo: pos
 titulo: Venta en efectivo con cambio
 rol: cajero
-datos: [caja y almacén de prueba fijos (seed ia.*), sesión de caja abierta de ia.cajero, 'seed:productos-pos (≥1
-    producto con existencia)']
+datos: ['seed:caja-prueba', 'seed:productos-pos']
 inicio: /internal/pos
 pasos:
 - accion: clic
-  ancla: pos-live-catalog
-  ancla_pendiente: pos-catalogo-producto
+  ancla: pos-catalogo-producto
   respaldo: {rol: button, nombre: '{{producto.nombre}}'}
   explica: Agrega el producto desde el catálogo
 - accion: tecla
-  ancla_pendiente: pos-cobrar
+  ancla: pos-cobrar
   tecla: F5
   explica: Abre el cobro (también Enter o «Cobrar ahora»)
   espera: {visible: Forma de pago}
 - accion: escribir
-  ancla_pendiente: pos-pago-efectivo
+  ancla: pos-pago-efectivo
   respaldo: {rol: textbox, nombre: Efectivo}
   texto: '100000'
   explica: Captura lo que entrega el cliente (#input_cash)
 - accion: clic
-  ancla_pendiente: pos-pago-finalizar
+  ancla: pos-pago-finalizar
   respaldo: {rol: button, nombre: Pagar}
   explica: '#final-payment'
   backend: {api: POST /api/pos-tickets, status: 2xx}

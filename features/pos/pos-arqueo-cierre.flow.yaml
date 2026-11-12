@@ -3,14 +3,14 @@ feature: pos-arqueo-cierre
 modulo: pos
 titulo: Arqueo y cierre de caja
 rol: cajero
-datos: [caja y almacén de prueba fijos (seed ia.*), sesión de caja abierta de ia.cajero, al menos 1 venta]
+datos: ['seed:caja-prueba', 'al menos 1 venta']
 inicio: /internal/pos
 pasos:
 - accion: clic
-  ancla_pendiente: pos-menu-caja
+  ancla: pos-menu-caja
   respaldo: {rol: button, nombre: Menú de la caja}
 - accion: clic
-  ancla_pendiente: pos-cierre-caja
+  ancla: pos-cierre-caja
   respaldo: {rol: menuitem, nombre: Cierre de caja}
   espera: {visible: Concluir cierre}
 - accion: escribir
@@ -20,7 +20,7 @@ pasos:
   explica: Cuenta billetes y monedas
   captura: arqueo
 - accion: clic
-  ancla_pendiente: pos-cierre-concluir
+  ancla: pos-cierre-concluir
   respaldo: {rol: button, nombre: Concluir cierre}
   backend: {api: 'PATCH /api/pos-session/{{sesion.id}}', status: 2xx}
 variantes: [teclado, movil-360, sin-conexion, sin-permiso]

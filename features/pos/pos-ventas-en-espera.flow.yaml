@@ -3,13 +3,11 @@ feature: pos-ventas-en-espera
 modulo: pos
 titulo: Poner una venta en espera y recuperarla
 rol: cajero
-datos: [caja y almacén de prueba fijos (seed ia.*), sesión de caja abierta de ia.cajero, 'seed:productos-pos (≥1
-    producto con existencia)']
+datos: ['seed:caja-prueba', 'seed:productos-pos']
 inicio: /internal/pos
 pasos:
 - accion: clic
-  ancla: pos-live-catalog
-  ancla_pendiente: pos-catalogo-producto
+  ancla: pos-catalogo-producto
   respaldo: {rol: button, nombre: '{{producto.nombre}}'}
   explica: Agrega el producto desde el catálogo
 - {accion: tecla, tecla: F7, explica: Deja la venta en espera}

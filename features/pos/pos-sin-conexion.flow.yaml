@@ -3,32 +3,30 @@ feature: pos-sin-conexion
 modulo: pos
 titulo: Vender sin conexión y sincronizar al volver
 rol: cajero
-datos: [caja y almacén de prueba fijos (seed ia.*), sesión de caja abierta de ia.cajero, 'seed:productos-pos (≥1
-    producto con existencia)', catálogo offline sincronizado]
+datos: ['seed:caja-prueba', 'seed:productos-pos', 'catálogo offline sincronizado']
 inicio: /internal/pos
 pasos:
 - accion: clic
-  ancla_pendiente: pos-modo-trabajo
+  ancla: pos-modo-trabajo
   respaldo: {rol: switch, nombre: OFFLINE}
   explica: Cambia la caja a modo sin conexión
 - {accion: sin-conexion, explica: Corta la red del navegador}
 - accion: clic
-  ancla: pos-live-catalog
-  ancla_pendiente: pos-catalogo-producto
+  ancla: pos-catalogo-producto
   respaldo: {rol: button, nombre: '{{producto.nombre}}'}
   explica: Agrega el producto desde el catálogo
 - accion: tecla
-  ancla_pendiente: pos-cobrar
+  ancla: pos-cobrar
   tecla: F5
   explica: Abre el cobro (también Enter o «Cobrar ahora»)
   espera: {visible: Forma de pago}
 - accion: clic
-  ancla_pendiente: pos-pago-finalizar
+  ancla: pos-pago-finalizar
   respaldo: {rol: button, nombre: Pagar}
   explica: El ticket queda en la cola local
   captura: cola
 - accion: clic
-  ancla_pendiente: pos-modo-trabajo
+  ancla: pos-modo-trabajo
   respaldo: {rol: switch, nombre: ONLINE}
   explica: Al volver, los tickets pendientes se sincronizan
   backend: {api: POST /api/pos-tickets, status: 2xx}

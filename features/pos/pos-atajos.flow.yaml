@@ -3,7 +3,7 @@ feature: pos-atajos
 modulo: pos
 titulo: Atajos de teclado
 rol: cajero
-datos: [caja y almacén de prueba fijos (seed ia.*), sesión de caja abierta de ia.cajero]
+datos: ['seed:caja-prueba']
 inicio: /internal/pos
 pasos:
 - accion: tecla

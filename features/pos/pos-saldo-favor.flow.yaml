@@ -3,7 +3,7 @@ feature: pos-saldo-favor
 modulo: pos
 titulo: Devolver como saldo a favor y usarlo
 rol: cajero
-datos: [caja y almacén de prueba fijos (seed ia.*), sesión de caja abierta de ia.cajero, venta cerrada con cliente]
+datos: ['seed:caja-prueba', 'seed:productos-pos', 'seed:cliente-credito', 'venta cerrada con cliente']
 inicio: /internal/pos
 pasos:
 - accion: tecla
@@ -15,19 +15,18 @@ pasos:
   texto: '{{venta.folio}}'
 - {accion: tecla, tecla: Enter}
 - accion: clic
-  ancla_pendiente: pos-devolucion-saldo-favor
+  ancla: pos-devolucion-saldo-favor
   respaldo: {rol: checkbox, nombre: Reembolsar como saldo a favor del cliente}
 - accion: clic
-  ancla_pendiente: pos-devolucion-confirmar
+  ancla: pos-devolucion-confirmar
   respaldo: {rol: button, nombre: Registrar}
   backend: {api: 'GET /api/pos-tickets/saldo-favor?cliente={{cliente.id}}', status: 200}
 - accion: clic
-  ancla: pos-live-catalog
-  ancla_pendiente: pos-catalogo-producto
+  ancla: pos-catalogo-producto
   respaldo: {rol: button, nombre: '{{producto.nombre}}'}
   explica: Agrega el producto desde el catálogo
 - accion: tecla
-  ancla_pendiente: pos-cobrar
+  ancla: pos-cobrar
   tecla: F5
   explica: Abre el cobro (también Enter o «Cobrar ahora»)
   espera: {visible: Forma de pago}
@@ -35,7 +34,7 @@ pasos:
   ancla: pos-formas-de-pago
   respaldo: {rol: radio, nombre: Saldo a favor}
 - accion: clic
-  ancla_pendiente: pos-pago-finalizar
+  ancla: pos-pago-finalizar
   respaldo: {rol: button, nombre: Pagar}
   espera: {visible: Pagado con saldo a favor}
   captura: saldo

@@ -3,7 +3,7 @@ feature: pos-reimpresion
 modulo: pos
 titulo: Reimprimir ticket o remisión por folio
 rol: cajero
-datos: [caja y almacén de prueba fijos (seed ia.*), sesión de caja abierta de ia.cajero, venta cerrada (folio)]
+datos: ['seed:caja-prueba', 'venta cerrada (folio)']
 inicio: /internal/pos
 pasos:
 - accion: tecla
@@ -13,12 +13,12 @@ pasos:
   ancla: pos-reimpresion
   respaldo: {rol: button, nombre: Reimprimir por folio}
 - accion: escribir
-  ancla_pendiente: pos-reimpresion-folio
+  ancla: pos-reimpresion-folio
   respaldo: {rol: textbox, nombre: Folio}
   texto: '{{venta.folio}}'
   backend: {api: 'GET /api/pos-tickets/por-folio?folio={{venta.folio}}', status: 200}
 - accion: clic
-  ancla_pendiente: pos-reimpresion-remision
+  ancla: pos-reimpresion-remision
   respaldo: {rol: button, nombre: Remisión}
   espera: {visible: '*** COPIA ***'}
   backend: {api: POST /api/pos-tickets/reimpresion, status: 2xx}

@@ -3,11 +3,10 @@ feature: pos-conversiones-unidad
 modulo: pos
 titulo: Escanear el código de la caja (12 piezas)
 rol: cajero
-datos: [caja y almacén de prueba fijos (seed ia.*), sesión de caja abierta de ia.cajero, producto con «Otras unidades
-    de venta» caja=12]
+datos: ['seed:caja-prueba', 'seed:productos-pos']
 inicio: /internal/pos
 pasos:
-- {accion: escanear, ancla_pendiente: pos-escaner, codigo: '{{producto.codigo_caja}}', explica: Lee el código de
+- {accion: escanear, ancla: pos-escaner, codigo: '{{producto.codigo_caja}}', explica: Lee el código de
     la caja con el lector}
 - accion: esperar
   espera: {fila: '12'}

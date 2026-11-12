@@ -3,7 +3,7 @@ feature: pos-abrir-sesion
 modulo: pos
 titulo: Abrir sesión de caja
 rol: cajero
-datos: [caja y almacén de prueba fijos (seed ia.*), 'seed:productos-pos (≥1 producto con existencia)']
+datos: ['seed:caja-prueba', 'seed:productos-pos']
 inicio: /internal/pos
 pasos:
 - accion: esperar
@@ -11,7 +11,7 @@ pasos:
   backend: {api: GET /api/pos-session, status: 200}
   captura: gate
 - accion: clic
-  ancla_pendiente: pos-sesion-crear
+  ancla: pos-sesion-crear
   respaldo: {rol: button, nombre: Crear y abrir sesión}
   backend: {api: POST /api/pos-session, status: 2xx}
 - accion: esperar

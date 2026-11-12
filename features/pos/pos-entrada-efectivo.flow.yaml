@@ -3,7 +3,7 @@ feature: pos-entrada-efectivo
 modulo: pos
 titulo: Entrada de efectivo a la caja
 rol: cajero
-datos: [caja y almacén de prueba fijos (seed ia.*), sesión de caja abierta de ia.cajero]
+datos: ['seed:caja-prueba']
 inicio: /internal/pos
 pasos:
 - accion: tecla
@@ -14,7 +14,7 @@ pasos:
   respaldo: {rol: textbox, nombre: Importe}
   texto: '500'
 - accion: clic
-  ancla_pendiente: pos-entrada-efectivo-confirmar
+  ancla: pos-entrada-efectivo-confirmar
   respaldo: {rol: button, nombre: Registrar}
   backend: {api: POST /api/pos-tickets, status: 2xx}
   captura: entrada
