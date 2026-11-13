@@ -19,7 +19,7 @@ pasos:
   ancla: pos-formas-de-pago
   respaldo: {rol: radio, nombre: Cotización (no cobra)}
 - accion: clic
-  ancla_pendiente: pos-cotizacion-guardar
+  ancla: pos-cotizacion-guardar
   respaldo: {rol: button, nombre: Guardar}
   captura: cotizacion
 - accion: tecla

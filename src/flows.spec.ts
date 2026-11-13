@@ -30,14 +30,14 @@ const CORE_ANCHORS = new Set<string>([
   // Caja Angular del núcleo (frontend/src/app/components/pos), Fase 0.
   "pos-apartado-abono", "pos-apartado-folio", "pos-apartados", "pos-arqueo", "pos-atajos",
   "pos-catalogo-producto", "pos-cierre-caja", "pos-cierre-concluir", "pos-cobrar",
-  "pos-cotizacion-folio", "pos-cotizaciones", "pos-credito-abono-confirmar",
+  "pos-cotizacion-folio", "pos-cotizacion-guardar", "pos-cotizaciones", "pos-credito-abono-confirmar",
   "pos-credito-abono-importe", "pos-credito-clientes", "pos-devolucion",
   "pos-devolucion-confirmar", "pos-devolucion-inventario", "pos-devolucion-saldo-favor",
   "pos-devolucion-todo", "pos-entrada-efectivo", "pos-entrada-efectivo-confirmar",
   "pos-escaner", "pos-formas-de-pago", "pos-linea-cantidad", "pos-live-catalog",
   "pos-menu-caja", "pos-modo-trabajo", "pos-pago-efectivo", "pos-pago-finalizar",
   "pos-pago-referencia", "pos-reimpresion", "pos-reimpresion-folio",
-  "pos-reimpresion-remision", "pos-sesion-crear", "pos-sesion-usar",
+  "pos-reimpresion-remision", "pos-sesion-crear", "pos-sesion-pin-entendido", "pos-sesion-usar",
   "pos-ventas-en-espera",
 ]);
 
