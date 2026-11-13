@@ -18,7 +18,7 @@ pasos:
   explica: El PIN llega una sola vez
   espera: {visible: Guarda este PIN}
 - accion: clic
-  ancla_pendiente: pos-sesion-pin-entendido
+  ancla: pos-sesion-pin-entendido
   respaldo: {rol: button, nombre: Entendido}
   captura: sesion
 variantes: [teclado, movil-360, sin-conexion, sin-permiso]
